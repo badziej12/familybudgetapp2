@@ -1,0 +1,255 @@
+html,
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body{
+    position: relative;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+.nav-container{
+    height: 54px;
+    background: #3D159C;
+    box-shadow: 0px 4px 4px rgba(50, 48, 48, 0.51);
+}
+
+.wrapper{
+    max-width: 1200px;
+    margin: 0 auto;
+    
+
+}
+
+.background{
+    background: linear-gradient(117.69deg, #753FF6 15.55%, #9E76FF 115.48%, rgba(117, 63, 246, 0) 115.49%);
+    padding: 37px;
+    height: calc(100vh - 54px);
+}
+
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    float: right;
+    height: 54px;
+}
+
+nav ul{
+    display: flex;
+    
+}
+
+.nav-items li{
+    list-style: none;
+    margin-right: 100px;
+    
+}
+
+.nav-items li a{
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    color: #FFFFFF;
+    text-decoration: none ;
+}
+
+/* Header */
+
+.header-container {
+    margin: 0px;
+    padding: 35px;
+    background: #F6F2FF;
+    box-sizing: content-box;
+    align-items: center;
+    border-radius: 20px;
+    background-repeat: no-repeat;
+    background-position: right;
+    height: calc(100% - 54px);
+}
+
+.hero-content{
+    padding: 40px;
+    margin: 0 auto;
+    max-width: 621px;
+    height: 113px;
+    background: #3D159C;
+    border: 2px solid #E5E5E5;
+    border-radius: 20px;
+
+}
+
+header{
+    align-items: center;
+    justify-content: space-between;
+}
+
+header h1{
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 23px;
+    text-align: center;
+    line-height: 27px;
+    letter-spacing: 0.02em;
+    color: #FFFFFF;
+}
+
+.transasction-table{
+    margin-top: 35px;
+    margin-bottom: 35px;
+    font-family: 'Roboto',sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #585858;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background-color: #F6F2FF;
+    border-collapse: separate;
+    border-spacing: 0 17px;
+    
+}
+
+
+tr:nth-child(even) {
+    background-color: #E5E5E5;
+}
+
+td{
+    padding-left: 18px;
+}
+
+tr{
+    height: 33px;
+    border-spacing: 0 5px;
+    background: #FFFFFF;
+}
+
+th{
+    height: 70px;
+    background-color: #F6F2FF;
+    padding-left: 18px;
+
+}
+
+.button{
+    text-align: right;
+}
+
+.new{
+    width: 126px;
+    height: 36px;
+    background: #48D367;
+    border-radius: 20px;
+    border: none;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 21px;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.new:active{
+    background: #3abe57;
+}
+
+/* Sign in */
+
+.login-container{
+    max-width: 450px;
+    height: 390px;
+    margin: 150px auto;
+    padding: 20px;
+    background: #F6F2FF;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    background-repeat: no-repeat;
+    background-position: right;
+    box-sizing: content-box;
+    align-items: center;
+    vertical-align: middle;
+    text-align: center;
+}
+.welcome-container{
+    text-align: center;
+}
+
+.data-form{
+    margin-top: 32px;
+    margin-left: 73px;
+    margin-right: 73px;
+    position: relative;
+}
+.data-form input{
+    background: #FFFFFF;
+    border: 1px solid #DED2FA;
+    border-radius: 10px;
+    height: 50px;
+    padding: 20px 12px;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    color: black;
+    width: 100%;
+}
+
+.data-form label{
+    position: absolute;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 9px;
+    line-height: 11px;
+    color: #8B8B8B;
+    margin: 7px 12px;
+}
+
+.data-form.active label{
+    overflow: hidden;
+}
+
+.information{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    color: #8B8B8B;
+    margin: 30px auto;
+}
+.information a{
+    text-decoration: none;
+    color: rgba(117, 63, 246, 1)
+}
+.login-button{
+    background: #48D367;
+    border-radius: 20px;
+    width: 314px;
+    margin: 30px auto;
+    height: 47px;
+    border: none;
+    cursor: pointer;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    color: #FFFFFF;
+    transition: background 0.25s;
+}
+
+.login-button:active{
+    background: #3BC65A;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}

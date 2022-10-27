@@ -1,0 +1,95 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+
+type Mutation{
+    createUser(nickname: String!, email: String!,
+     password: String! first_name: String, last_name: String, age: Int, balance: Float, created_at: String): UserResult!
+    updateUser(id: ID!, nickname: String, email: String,
+     password: String, first_name: String, last_name: String, age: Int, balance: Float): UserResult!
+    deleteUser(id: ID): UserResult!
+    newTransaction(date: String, title: String!, recipient: String!, recipient_id: ID!,
+    sender: String!, sender_id: ID!, ammount: Float!):TransactionResult!
+    createFamily(name: String!, member_id: ID!): FamilyResult!
+    deleteFamily(id: ID): FamilyResult!
+}
+
+type User {
+    id: ID!
+    nickname: String!
+    email: String!
+    password: String!
+    first_name: String!
+    last_name: String!
+    age: Int!
+    balance: Float!
+    created_at: String!
+    transaction: [Transaction]
+    family: [Family]
+}
+
+type Transaction{
+    id: ID!
+    date: String!
+    title: String!
+    recipient: String!
+    recipient_id: String!
+    sender: String!
+    sender_id: String!
+    ammount: Float!
+}
+
+type Family{
+    id: ID!
+    name: String!
+    member: [User!] 
+}
+
+
+type TransactionResult {
+    success: Boolean!
+    errors: [String]
+    transaction: Transaction
+}
+
+type TransactionsResult {
+    success: Boolean!
+    errors: [String]
+    transactions: [Transaction]
+}
+
+type UserResult {
+    success: Boolean!
+    errors: [String]
+    user: User
+}
+
+type UsersResult {
+    success: Boolean!
+    errors: [String]
+    users: [User]
+}
+
+type FamilyResult{
+    success: Boolean!
+    errors: [String]
+    family: Family
+}
+
+type FamiliesResult{
+    success: Boolean!
+    errors: [String]
+    family: [Family]
+}
+
+type Query {
+    listUsers: UsersResult!
+    getUser(id: ID!): UserResult!
+    listTransactions: TransactionsResult!
+    getTransaction(id:ID!): TransactionResult!
+    listFamilies: FamiliesResult!
+    getFamily(id:ID!): FamilyResult!
+}
+

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Family Budget</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .wrapper{
+            height: 100%;
+        }
+        .nav-bars{
+            width: 115px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+        .navbar-info{
+            font-family: 'Roboto', sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 18px;
+            color: #FFFFFF;
+            margin: 0 auto;
+            
+        }
+
+        .nav-bars a{
+            font-family: 'Roboto', sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 18px;
+            color: #FFFFFF;
+            text-decoration: none ;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="nav-container">
+        <div class="wrapper">
+            <nav>
+                <div class="line">
+                    <img src="../static/Line.svg" alt="">
+                </div>
+                <div class="nav-bars" id="home">
+                    <label class="navbar-info">
+                        <a href="/userHome">
+                            Home
+                        </a>
+                    </label>
+                   </div>
+                <div class="nav-bars" id="families">
+                    <label class="navbar-info">
+                        <a href="#">
+                            Families
+                        </a>
+                    </label>
+                   </div>
+                   <div class="nav-bars" id="profile">
+                    <label class="navbar-info">
+                        <a href="#">
+                            Your profile
+                        </a>
+                    </label>
+                   </div>
+               <div class="nav-bars">
+                    <label class="navbar-info" id="logout">
+                        <a href="/logout">
+                            Log out
+                        </a>
+                    </label>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="background">
+        <div class="wrapper">
+            <div class="header-container">
+                {% block content %} {% endblock %}
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

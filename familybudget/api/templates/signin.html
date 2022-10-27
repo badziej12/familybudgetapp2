@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Family Budget</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        #welcoming{
+            font-family: 'Roboto', sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 36px;
+            line-height: 42px;
+            color: #000000;
+        }
+
+        .data-form input:focus{
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border: 1px solid #DED2FA;
+        }
+   
+    </style>
+</head>
+<body>
+    <div class="background" style="height: 100vh;">
+        <div class="login-container" >
+            <form class="form-signin" action="/api/validateLogin" method="POST">
+                <div class="welcome-container">
+                    <label id="welcoming">Welcome Back! Login</label>
+                </div>
+                <div class="data-form" id="Email">
+                    <label id="inputEmail" for="inputEmail">Email adrres</label> 
+                    <input type="email" name="inputEmail" id="inputEmail" placeholder="jankowalski@gmail.com" required autofocus>
+                </div>
+                <div class="data-form" id="Password">
+                    <label id="inputPassword" for="inputPassword">Password</label> 
+                    <input type="password" name="inputPassword" id="inputPassword" placeholder="password" required>
+                </div>
+                <div style="margin-top: 17px;">
+                    <label class="information">
+                        Forgot Password? Click
+                        <a href="#">HERE</a>
+                    </label>
+                </div>
+                <div>
+                    <button class="login-button" type="submit">Login</button>
+                </div>
+                <div style="width: 100%;">
+                    <label class="information">
+                        Don't have an account yet?
+                        <a href="/signup">SIGN UP</a>
+                    </label>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+
+
+
+</body>
+<script>
+    var email = document.getElementById('Email')
+    var password = document.getElementById('Password')
+
+    
+
+</script>
+
+</html>
