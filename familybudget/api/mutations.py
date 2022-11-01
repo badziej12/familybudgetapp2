@@ -1,8 +1,9 @@
 from datetime import date
 from multiprocessing.sharedctypes import Value
+from unicodedata import category
 from ariadne import convert_kwargs_to_snake_case
 from api import db
-from api.models import Families, Transactions, Users
+from api.models import Categorires, Families, Transactions, Users
 from psycopg2 import IntegrityError
 
 @convert_kwargs_to_snake_case
@@ -90,6 +91,26 @@ def create_family_resolver(obj, info, name, member_id):
         payload = {
             "success": False,
             "errors": ["Nickname {nickname} already exists"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def create_category_resolver(obj, info, name):
+    try:
+        
+        category = Categorires(
+            name = name
+        )
+        db.session.add(category)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "category": category.to_dict()
+        }
+    except IntegrityError:
+        payload = {
+            "success": False,
+            "errors": ["Name {name} already exists"]
         }
     return payload
 

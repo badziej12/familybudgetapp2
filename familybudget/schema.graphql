@@ -14,6 +14,7 @@ type Mutation{
     sender: String!, sender_id: ID!, ammount: Float!):TransactionResult!
     createFamily(name: String!, member_id: ID!): FamilyResult!
     deleteFamily(id: ID): FamilyResult!
+    createCategory(name: String!): CategoryResult!
 }
 
 type User {
@@ -39,12 +40,20 @@ type Transaction{
     sender: String!
     sender_id: String!
     ammount: Float!
+    category_id: String!
+    category: Category!
 }
 
 type Family{
     id: ID!
     name: String!
     member: [User!] 
+}
+
+type Category{
+    id: ID!
+    name: String!
+    transaction: [Transaction] 
 }
 
 
@@ -81,7 +90,19 @@ type FamilyResult{
 type FamiliesResult{
     success: Boolean!
     errors: [String]
-    family: [Family]
+    families: [Family]
+}
+
+type CategoryResult{
+    success: Boolean!
+    errors: [String]
+    category: Category
+}
+
+type CategoriesResult{
+    success: Boolean!
+    errors: [String]
+    categories: [Category]
 }
 
 type Query {
@@ -91,5 +112,7 @@ type Query {
     getTransaction(id:ID!): TransactionResult!
     listFamilies: FamiliesResult!
     getFamily(id:ID!): FamilyResult!
+    getCategory(id:ID!): CategoryResult!
+    listCategories: CategoriesResult!
 }
 
