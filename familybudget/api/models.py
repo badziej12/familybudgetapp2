@@ -1,7 +1,7 @@
 from app import db
-from sqlalchemy.orm import  relationship
+from sqlalchemy.orm import relationship
 
-member_table = db.Table(
+members_table = db.Table(
     "members",
     db.Model.metadata,
     db.Column("user_id", db.ForeignKey("user.id"), primary_key=True),
@@ -19,9 +19,13 @@ class Users(db.Model):
     age = db.Column(db.Integer)
     balance = db.Column(db.Float)
     created_at = db.Column(db.Date)
-    families = relationship(
-        "Families", secondary=member_table, back_populates="members"
+    families = db.relationship(
+        "Families", secondary=members_table, back_populates="members"
     )
+    outcome = db.relationship("Transactions", backref="sender", lazy="dynamic",
+     foreign_keys="Transactions.sender_id")
+    income = db.relationship("Transactions", backref="recipient", lazy="dynamic",
+     foreign_keys="Transactions.recipient_id")
     
     def to_dict(self):
         return {
@@ -34,6 +38,8 @@ class Users(db.Model):
             "age": self.age,
             "balance": self.balance,
             "created_at": str(self.created_at.strftime('%d-%m-%Y')),
+            "income": self.income,
+            "outcome": self.outcome
         }
 
 class Transactions(db.Model):
@@ -41,17 +47,12 @@ class Transactions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date)
     title = db.Column(db.String)
-    recipient = db.Column(db.String)
-    sender = db.Column(db.String)
     recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     ammount = db.Column(db.Float)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
     category = relationship("Categories", back_populates="transaction")
-
-    recipient_rel = relationship("Users", foreign_keys=[recipient_id])
-    sender_rel = relationship("Users", foreign_keys=[sender_id])
     def to_dict(self):
         return {
             "id": self.id,
@@ -62,7 +63,8 @@ class Transactions(db.Model):
             "recipient_id": self.recipient_id,
             "sender_id": self.sender_id,
             "ammount": self.ammount,
-            "category_id": self.category_id
+            "category_id": self.category_id,
+            "category": self.category
         }
 
 
@@ -70,25 +72,52 @@ class Families(db.Model):
     __tablename__ = "family"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
-    members = relationship(
-        "Users", secondary=member_table, back_populates="families"
+    goal_id = db.Column(db.Integer, db.ForeignKey("goal.id"))
+
+    goals = db.relationship("Goals", back_populates="family")
+    members = db.relationship(
+        "Users", secondary=members_table, back_populates="families"
     )
     def to_dict(self):
         return{
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "goal_id": self.goal_id,
+            "goals": self.goals,
+            "members": self.members
         }
 
-class Categorires(db.Model):
+class Categories(db.Model):
     __tablename__ = "category"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String, unique=True)
 
-    transactions = relationship("Transaction", order_by=Transactions.id, back_populates="category")
+    transaction = db.relationship("Transactions", back_populates="category")
+    goals = db.relationship("Goals", back_populates="category")
+    
     def to_dict(self):
-        return{
+        return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "transaction": self.transaction
         }
 
+class Goals(db.Model):
+    __tablename__ = "goal"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    price = db.Column(db.Float)
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
 
+    category = db.relationship("Categories", back_populates="goals")
+    family = db.relationship("Families", back_populates="goals")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "price": self.price,
+            "category_id": self.category_id,
+            "category": self.category,
+            "family": self.family
+        }

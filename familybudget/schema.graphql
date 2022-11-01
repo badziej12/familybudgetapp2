@@ -10,8 +10,8 @@ type Mutation{
     updateUser(id: ID!, nickname: String, email: String,
      password: String, first_name: String, last_name: String, age: Int, balance: Float): UserResult!
     deleteUser(id: ID): UserResult!
-    newTransaction(date: String, title: String!, recipient: String!, recipient_id: ID!,
-    sender: String!, sender_id: ID!, ammount: Float!):TransactionResult!
+    newTransaction(date: String, title: String!, recipient_id: ID!,
+    sender_id: ID!, ammount: Float!, category_id: ID!):TransactionResult!
     createFamily(name: String!, member_id: ID!): FamilyResult!
     deleteFamily(id: ID): FamilyResult!
     createCategory(name: String!): CategoryResult!
@@ -27,7 +27,8 @@ type User {
     age: Int!
     balance: Float!
     created_at: String!
-    transaction: [Transaction]
+    income: [Transaction]
+    outcome: [Transaction]
     family: [Family]
 }
 
@@ -35,9 +36,9 @@ type Transaction{
     id: ID!
     date: String!
     title: String!
-    recipient: String!
+    recipient: User!
     recipient_id: String!
-    sender: String!
+    sender: User!
     sender_id: String!
     ammount: Float!
     category_id: String!
@@ -53,9 +54,8 @@ type Family{
 type Category{
     id: ID!
     name: String!
-    transaction: [Transaction] 
+    transaction: [Transaction!]
 }
-
 
 type TransactionResult {
     success: Boolean!
@@ -105,6 +105,8 @@ type CategoriesResult{
     categories: [Category]
 }
 
+
+
 type Query {
     listUsers: UsersResult!
     getUser(id: ID!): UserResult!
@@ -112,7 +114,7 @@ type Query {
     getTransaction(id:ID!): TransactionResult!
     listFamilies: FamiliesResult!
     getFamily(id:ID!): FamilyResult!
-    getCategory(id:ID!): CategoryResult!
     listCategories: CategoriesResult!
+    getCategory(id: ID!): CategoryResult!
 }
 

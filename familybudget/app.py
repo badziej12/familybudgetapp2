@@ -5,7 +5,7 @@ from ariadne import load_schema_from_path, make_executable_schema, \
 from ariadne.constants import PLAYGROUND_HTML
 from flask import request, jsonify, render_template, json, session, redirect
 from api.queries import getCategory_resolver, listCategories_resolver, listUsers_resolver, getUser_resolver, listTransactions_resolver, getTransaction_resolver, getFamily_resolver, listFamilies_resolver
-from api.mutations import create_user_resolver, update_user_resolver, delete_user_resolver, new_transaction_resolver, create_family_resolver, delete_family_resolver
+from api.mutations import create_user_resolver, update_user_resolver, delete_user_resolver, new_transaction_resolver, create_family_resolver, delete_family_resolver, create_category_resolver
 
 query = ObjectType("Query")
 mutation = ObjectType("Mutation")
@@ -15,14 +15,15 @@ query.set_field("listTransactions", listTransactions_resolver)
 query.set_field("getTransaction", getTransaction_resolver)
 query.set_field("listFamilies", listFamilies_resolver)
 query.set_field("getFamily", getFamily_resolver)
-query.set_field("listCategories", listCategories_resolver)
 query.set_field("getCategory", getCategory_resolver)
+query.set_field("listCategories", listCategories_resolver)
 mutation.set_field("createUser", create_user_resolver)
 mutation.set_field("updateUser", update_user_resolver)
 mutation.set_field("deleteUser", delete_user_resolver)
 mutation.set_field("newTransaction", new_transaction_resolver)
 mutation.set_field("createFamily", create_family_resolver)
 mutation.set_field("deleteFamily", delete_family_resolver)
+mutation.set_field("createCategory", create_category_resolver)
 
 app.secret_key = 'why would I tell you my secret key?'
 
