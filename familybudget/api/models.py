@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import relationship
 
 members_table = db.Table(
     "members",
@@ -19,9 +19,13 @@ class Users(db.Model):
     age = db.Column(db.Integer)
     balance = db.Column(db.Float)
     created_at = db.Column(db.Date)
-    families = relationship(
+    families = db.relationship(
         "Families", secondary=members_table, back_populates="members"
     )
+    outcome = db.relationship("Transactions", backref="sender", lazy="dynamic",
+     foreign_keys="Transactions.sender_id")
+    income = db.relationship("Transactions", backref="recipient", lazy="dynamic",
+     foreign_keys="Transactions.recipient_id")
     
     def to_dict(self):
         return {
@@ -33,7 +37,9 @@ class Users(db.Model):
             "last_name": self.last_name,
             "age": self.age,
             "balance": self.balance,
-            "created_at": str(self.created_at.strftime('%d-%m-%Y'))
+            "created_at": str(self.created_at.strftime('%d-%m-%Y')),
+            "income": self.income,
+            "outcome": self.outcome
         }
 
 class Transactions(db.Model):
@@ -41,14 +47,12 @@ class Transactions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date)
     title = db.Column(db.String)
-    recipient = db.Column(db.String)
-    sender = db.Column(db.String)
     recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     ammount = db.Column(db.Float)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
-    recipient_rel = relationship("Users", foreign_keys=[recipient_id])
-    sender_rel = relationship("Users", foreign_keys=[sender_id])
+    category = relationship("Categories", back_populates="transaction")
     def to_dict(self):
         return {
             "id": self.id,
@@ -59,6 +63,8 @@ class Transactions(db.Model):
             "recipient_id": self.recipient_id,
             "sender_id": self.sender_id,
             "ammount": self.ammount,
+            "category_id": self.category_id,
+            "category": self.category
         }
 
 
@@ -66,7 +72,7 @@ class Families(db.Model):
     __tablename__ = "family"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
-    members = relationship(
+    members = db.relationship(
         "Users", secondary=members_table, back_populates="families"
     )
     def to_dict(self):
@@ -75,4 +81,16 @@ class Families(db.Model):
             "name": self.name
         }
 
+class Categories(db.Model):
+    __tablename__ = "category"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True)
 
+    transaction = db.relationship("Transactions", back_populates="category")
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "transaction": self.transaction
+        }

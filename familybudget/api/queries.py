@@ -1,4 +1,4 @@
-from .models import Families, Users, Transactions
+from .models import Families, Users, Transactions, Categories
 from ariadne import convert_kwargs_to_snake_case
 
 def listUsers_resolver(obj, info):
@@ -48,13 +48,29 @@ def listFamilies_resolver(obj, info):
         }
     return payload
 
+def listCategories_resolver(obj, info):
+    try:
+        categories = [category.to_dict() for category in Categories.query.all()]
+        print(categories)
+        payload = {
+            "success": True,
+            "category": categories
+        }
+    except Exception as error:
+        payload = {
+                "success": False,
+                "errors": [str(error)]
+        }
+    return payload
+    
+
 
 @convert_kwargs_to_snake_case
 def getUser_resolver(obj, info, id):
     try:
         user = Users.query.get(id)
         user_transactions = []
-        transactions = listTransactions_resolver(None, None)["transactions"]
+        transactions = listTransactions_resolver(user, None)
         print(transactions)
         for transaction in transactions:
             if transaction.recipient_id == int(id) or transaction.sender_id == int(id):
@@ -107,4 +123,18 @@ def getFamily_resolver(obj, info, id):
         }
     return payload
 
+@convert_kwargs_to_snake_case
+def getCategory_resolver(obj, info, id):
+    try:
+        category = Categories.query.get(id)
+        payload = {
+            "success": True,
+            "category": category.to_dict()
+        }
+    except AttributeError: # todo not found
+        payload = {
+            "success": False,
+            "errors": ["Transaction item matching {id} not found"]
+        }
+    return payload
 
