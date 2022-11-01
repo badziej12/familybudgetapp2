@@ -72,13 +72,19 @@ class Families(db.Model):
     __tablename__ = "family"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+    goal_id = db.Column(db.Integer, db.ForeignKey("goal.id"))
+
+    goals = db.relationship("Goals", back_populates="family")
     members = db.relationship(
         "Users", secondary=members_table, back_populates="families"
     )
     def to_dict(self):
         return{
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "goal_id": self.goal_id,
+            "goals": self.goals,
+            "members": self.members
         }
 
 class Categories(db.Model):
@@ -87,10 +93,31 @@ class Categories(db.Model):
     name = db.Column(db.String, unique=True)
 
     transaction = db.relationship("Transactions", back_populates="category")
+    goals = db.relationship("Goals", back_populates="category")
     
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
             "transaction": self.transaction
+        }
+
+class Goals(db.Model):
+    __tablename__ = "goal"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    price = db.Column(db.Float)
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
+
+    category = db.relationship("Categories", back_populates="goals")
+    family = db.relationship("Families", back_populates="goals")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "price": self.price,
+            "category_id": self.category_id,
+            "category": self.category,
+            "family": self.family
         }
