@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-from .models import Categorires, Families, Users, Transactions
-=======
 from .models import Families, Users, Transactions, Categories
->>>>>>> fc1b254d3d50c696e7675f263e9b4b8b0365c4e0
 from ariadne import convert_kwargs_to_snake_case
 
 def listUsers_resolver(obj, info):
@@ -54,11 +50,7 @@ def listFamilies_resolver(obj, info):
 
 def listCategories_resolver(obj, info):
     try:
-<<<<<<< HEAD
-        categories = [category.to_dict() for category in Categorires.query.all()]
-=======
         categories = [category.to_dict() for category in Categories.query.all()]
->>>>>>> fc1b254d3d50c696e7675f263e9b4b8b0365c4e0
         print(categories)
         payload = {
             "success": True,
@@ -70,23 +62,15 @@ def listCategories_resolver(obj, info):
                 "errors": [str(error)]
         }
     return payload
-<<<<<<< HEAD
-=======
     
->>>>>>> fc1b254d3d50c696e7675f263e9b4b8b0365c4e0
 
 
 @convert_kwargs_to_snake_case
 def getUser_resolver(obj, info, id):
     try:
         user = Users.query.get(id)
-<<<<<<< HEAD
-        """ user_transactions = []
-        transactions = listTransactions_resolver(None, None)["transactions"]
-=======
         user_transactions = []
         transactions = listTransactions_resolver(user, None)
->>>>>>> fc1b254d3d50c696e7675f263e9b4b8b0365c4e0
         print(transactions)
         for transaction in transactions:
             if transaction.recipient_id == int(id) or transaction.sender_id == int(id):
@@ -94,9 +78,9 @@ def getUser_resolver(obj, info, id):
         
         print(user.to_dict())
         userdict = user.to_dict()
-        print(userdict)
+
         userdict.update({"transaction": user_transactions})
-        print(userdict) """
+        
 
         payload = {
             "success": True,
@@ -142,11 +126,7 @@ def getFamily_resolver(obj, info, id):
 @convert_kwargs_to_snake_case
 def getCategory_resolver(obj, info, id):
     try:
-<<<<<<< HEAD
-        category = Categorires.query.get(id)
-=======
         category = Categories.query.get(id)
->>>>>>> fc1b254d3d50c696e7675f263e9b4b8b0365c4e0
         payload = {
             "success": True,
             "category": category.to_dict()
@@ -154,13 +134,7 @@ def getCategory_resolver(obj, info, id):
     except AttributeError: # todo not found
         payload = {
             "success": False,
-<<<<<<< HEAD
-            "errors": ["Category item matching {id} not found"]
-        }
-    return payload
-=======
             "errors": ["Transaction item matching {id} not found"]
         }
     return payload
 
->>>>>>> fc1b254d3d50c696e7675f263e9b4b8b0365c4e0

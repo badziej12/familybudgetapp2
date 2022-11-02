@@ -17,15 +17,13 @@ class Users(db.Model):
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
     age = db.Column(db.Integer)
-    balance = db.Column(db.Float)
+    wallet_id = db.Column(db.Integer, db.ForeignKey('wallet.id'))
+    wallet = db.relationship("Wallet", back_populates="users")
     created_at = db.Column(db.Date)
     families = db.relationship(
         "Families", secondary=members_table, back_populates="members"
     )
-    outcome = db.relationship("Transactions", backref="sender", lazy="dynamic",
-     foreign_keys="Transactions.sender_id")
-    income = db.relationship("Transactions", backref="recipient", lazy="dynamic",
-     foreign_keys="Transactions.recipient_id")
+    
     
     def to_dict(self):
         return {
@@ -36,10 +34,10 @@ class Users(db.Model):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "age": self.age,
-            "balance": self.balance,
+            "wallet_id": self.wallet_id,
+            "wallet": self.wallet,
             "created_at": str(self.created_at.strftime('%d-%m-%Y')),
-            "income": self.income,
-            "outcome": self.outcome
+            
         }
 
 class Transactions(db.Model):
@@ -47,8 +45,8 @@ class Transactions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date)
     title = db.Column(db.String)
-    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('wallet.id'))
+    sender_id = db.Column(db.Integer, db.ForeignKey('wallet.id'))
     ammount = db.Column(db.Float)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
@@ -73,6 +71,8 @@ class Families(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     goal_id = db.Column(db.Integer, db.ForeignKey("goal.id"))
+    wallet_id = db.Column(db.Integer, db.ForeignKey("wallet.id"))
+    wallet = db.relationship("Wallet", back_populates="families")
 
     goals = db.relationship("Goals", back_populates="family")
     members = db.relationship(
@@ -120,4 +120,27 @@ class Goals(db.Model):
             "category_id": self.category_id,
             "category": self.category,
             "family": self.family
+        }
+
+class Wallet(db.Model):
+    __tablename__ = "wallet"
+    id = db.Column(db.Integer, primary_key=True)
+    balance = db.Column(db.Float)
+
+    users = db.relationship("Users", back_populates="wallet")
+    families = db.relationship("Families", back_populates="wallet")
+
+    outcome = db.relationship("Transactions", backref="sender", lazy="dynamic",
+     foreign_keys="Transactions.sender_id")
+    income = db.relationship("Transactions", backref="recipient", lazy="dynamic",
+     foreign_keys="Transactions.recipient_id")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "balance": self.balance,
+            "users": self.users,
+            "families": self.families,
+            "outcome": self.outcome,
+            "income": self.income
         }
