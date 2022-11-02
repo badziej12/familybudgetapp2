@@ -1,4 +1,4 @@
-from .models import Families, Users, Transactions, Categories
+from .models import Families, Users, Transactions, Categories, Wallet, Goals
 from ariadne import convert_kwargs_to_snake_case
 
 def listUsers_resolver(obj, info):
@@ -64,6 +64,35 @@ def listCategories_resolver(obj, info):
     return payload
     
 
+def listWallets_resolver(obj, info):
+    try:
+        wallets = [wallet.to_dict() for wallet in Wallet.query.all()]
+        print(wallets)
+        payload = {
+            "success": True,
+            "wallets": wallets
+        }
+    except Exception as error:
+        payload = {
+                "success": False,
+                "errors": [str(error)]
+        }
+    return payload
+
+def listGoals_resolver(obj, info):
+    try:
+        goals = [goal.to_dict() for goal in Goals.query.all()]
+        print(Goals)
+        payload = {
+            "success": True,
+            "goals": goals
+        }
+    except Exception as error:
+        payload = {
+                "success": False,
+                "errors": [str(error)]
+        }
+    return payload
 
 @convert_kwargs_to_snake_case
 def getUser_resolver(obj, info, id):
@@ -119,7 +148,7 @@ def getFamily_resolver(obj, info, id):
     except AttributeError: # todo not found
         payload = {
             "success": False,
-            "errors": ["Transaction item matching {id} not found"]
+            "errors": ["Family item matching {id} not found"]
         }
     return payload
 
@@ -134,7 +163,37 @@ def getCategory_resolver(obj, info, id):
     except AttributeError: # todo not found
         payload = {
             "success": False,
-            "errors": ["Transaction item matching {id} not found"]
+            "errors": ["Category item matching {id} not found"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def getWallet_resolver(obj, info, id):
+    try:
+        wallet = Wallet.query.get(id)
+        payload = {
+            "success": True,
+            "wallet": wallet.to_dict()
+        }
+    except AttributeError: # todo not found
+        payload = {
+            "success": False,
+            "errors": ["Wallet item matching {id} not found"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def getGoal_resolver(obj, info, id):
+    try:
+        goal = Goals.query.get(id)
+        payload = {
+            "success": True,
+            "goal": goal.to_dict()
+        }
+    except AttributeError: # todo not found
+        payload = {
+            "success": False,
+            "errors": ["Goal item matching {id} not found"]
         }
     return payload
 

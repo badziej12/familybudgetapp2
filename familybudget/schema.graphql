@@ -25,10 +25,9 @@ type User {
     first_name: String!
     last_name: String!
     age: Int!
-    balance: Float!
+    wallet_id: String!
+    wallet: Wallet!
     created_at: String!
-    income: [Transaction]
-    outcome: [Transaction]
     family: [Family]
 }
 
@@ -36,9 +35,9 @@ type Transaction{
     id: ID!
     date: String!
     title: String!
-    recipient: User!
+    recipient: Wallet!
     recipient_id: String!
-    sender: User!
+    sender: Wallet!
     sender_id: String!
     ammount: Float!
     category_id: String!
@@ -48,13 +47,35 @@ type Transaction{
 type Family{
     id: ID!
     name: String!
-    member: [User!] 
+    goal_id: String
+    goal: [Goal]
+    wallet_id: String!
+    wallet: Wallet!
+    members: [User!] 
 }
 
 type Category{
     id: ID!
     name: String!
-    transaction: [Transaction!]
+    transaction: [Transaction]
+}
+
+type Wallet{
+    id: ID!
+    balance: Float!
+    users: User!
+    families: Family!
+    outcome: [Transaction]
+    income: [Transaction]
+}
+
+type Goal{
+    id: ID!
+    name: String!
+    price: Float!
+    category_id: String!
+    category: Category!
+    family: Family!
 }
 
 type TransactionResult {
@@ -105,6 +126,31 @@ type CategoriesResult{
     categories: [Category]
 }
 
+type GoalResult{
+    success: Boolean!
+    errors: [String]
+    goal: Goal
+}
+
+type GoalsResult{
+    success: Boolean!
+    errors: [String]
+    goals: [Goal]
+}
+
+type WalletsResult{
+    success: Boolean!
+    errors: [String]
+    wallets: [Wallet]
+}
+
+type WalletResult{
+    success: Boolean!
+    errors: [String]
+    wallet: Wallet
+}
+
+
 
 
 type Query {
@@ -116,5 +162,9 @@ type Query {
     getFamily(id:ID!): FamilyResult!
     listCategories: CategoriesResult!
     getCategory(id: ID!): CategoryResult!
+    listGoals: GoalsResult!
+    getGoal(id: ID!): GoalResult!
+    listWallets: WalletsResult!
+    getWallet(id: ID!): WalletResult!
 }
 

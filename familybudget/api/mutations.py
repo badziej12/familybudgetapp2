@@ -1,16 +1,90 @@
 from datetime import date
 from ariadne import convert_kwargs_to_snake_case
 from api import db
-from api.models import Families, Transactions, Users, Categories
+from api.models import Families, Transactions, Users, Categories, Goals, Wallet
 from psycopg2 import IntegrityError
 
 @convert_kwargs_to_snake_case
-def create_user_resolver(obj, info, nickname, email, password, first_name, last_name, age, balance):
+def create_wallet_resolver(obj, info, balance):
+    try:
+        wallet = Wallet(balance=balance)
+        db.session.add(wallet)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "wallet": wallet.to_dict()
+        }
+    except IntegrityError:
+        payload = {
+            "success": False,
+            "errors": ["Wallet {wallet.id} already exsist!"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def update_wallet_resolver(obj, info, id, ammount):
+    try:
+        wallet = Wallet.query.get(id)
+        wallet.balance += ammount
+
+        db.session.add(wallet)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "wallet": wallet.to_dict()
+        }
+    except AttributeError:
+        payload = {
+            "success": False,
+            "errors": ["Wallet with id {id} not found."]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def create_goal_resolver(obj, info, name, price, category_id, family_id):
+    try:
+        goal = Goals(
+            name=name, price=price, category_id=category_id, family_id=family_id
+        )
+
+        db.session.add(goal)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "goal": goal.to_dict()
+        }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
+
+def delete_goal_resolver(obj, info, id):
+    try:
+        goal = Goals.query.get(id)
+
+        db.session.delete(goal)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "goal": goal.to_dict()
+        }
+    except AttributeError:
+        payload = {
+            "success": False,
+            "errors": ["Goal with id {id} not found."]
+        }
+    return payload
+
+
+@convert_kwargs_to_snake_case
+def create_user_resolver(obj, info, nickname, email, password, first_name, last_name, age, wallet_id):
     try:
         today = date.today()
         user = Users(
             nickname=nickname, first_name=first_name, email=email, password=password,
-             last_name=last_name, age=age, balance=balance, created_at=today.strftime("%b-%d-%Y")
+             last_name=last_name, age=age, wallet_id=wallet_id, created_at=today.strftime("%b-%d-%Y")
         )
         db.session.add(user)
         db.session.commit()
@@ -27,24 +101,24 @@ def create_user_resolver(obj, info, nickname, email, password, first_name, last_
     except IntegrityError:
         payload = {
             "success": False,
-            "errors": ["Nickname {nickname} already exists"]
+            "errors": ["Nickname {nickname} or email {email} already exists"]
         } 
 
     return payload
 
 @convert_kwargs_to_snake_case
-def new_transaction_resolver(obj, info, title, recipient, recipient_id, sender, sender_id, ammount, category_id):
+def new_transaction_resolver(obj, info, title, recipient_id, sender_id, ammount, category_id):
     try:
         today = date.today()
         transaction = Transactions(
             date = today.strftime("%b-%d-%Y"),
-            title=title, recipient=recipient, recipient_id=recipient_id, sender=sender,
+            title=title, recipient_id=recipient_id,
             sender_id=sender_id, ammount=ammount, category_id=category_id
         )
         decrease = 0 - ammount
 
-        update_user_resolver(None, None, recipient_id, None, None, None, None, None, None, ammount)
-        update_user_resolver(None, None, sender_id, None, None, None, None, None, None, decrease)
+        update_wallet_resolver(None, None, recipient_id, ammount)
+        update_wallet_resolver(None, None, sender_id, decrease)
         
         db.session.add(transaction)
         db.session.commit()
@@ -61,7 +135,7 @@ def new_transaction_resolver(obj, info, title, recipient, recipient_id, sender, 
     except IntegrityError:
         payload = {
             "success": False,
-            "errors": ["Nickname {nickname} already exists"]
+            "errors": ["Transaction {transaction.id} already exists"]
         } 
 
     return payload
@@ -88,7 +162,7 @@ def create_family_resolver(obj, info, name, member_id):
     except IntegrityError:
         payload = {
             "success": False,
-            "errors": ["Nickname {nickname} already exists"]
+            "errors": ["Family {family.id} already exists"]
         }
     return payload
 
@@ -108,7 +182,7 @@ def create_category_resolver(obj, info, name):
     except IntegrityError:
         payload = {
             "success": False,
-            "errors": ["Category {category} already exists"]
+            "errors": ["Category {name} already exists"]
         }
     return payload
 
@@ -133,7 +207,7 @@ def add_family_member_resolver(obj, info, member_id, family_id):
     return payload
 
 @convert_kwargs_to_snake_case
-def update_user_resolver(obj, info, id, nickname, email, password, first_name, last_name, age, balance):
+def update_user_resolver(obj, info, id, nickname, email, password, first_name, last_name, age):
     try:
         user = Users.query.get(id)
         if user:
@@ -149,8 +223,7 @@ def update_user_resolver(obj, info, id, nickname, email, password, first_name, l
                 user.last_name = last_name
             if age != None:
                 user.age = age
-            if balance != None:
-                user.balance += balance
+            
         db.session.add(user)
         db.session.commit()
         payload = {
@@ -160,7 +233,7 @@ def update_user_resolver(obj, info, id, nickname, email, password, first_name, l
     except AttributeError:  # todo not found
         payload = {
             "success": False,
-            "errors": ["item matching id {id} not found"]
+            "errors": ["Item matching id {id} not found"]
         }
     return payload
 

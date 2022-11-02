@@ -70,7 +70,6 @@ class Families(db.Model):
     __tablename__ = "family"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
-    goal_id = db.Column(db.Integer, db.ForeignKey("goal.id"))
     wallet_id = db.Column(db.Integer, db.ForeignKey("wallet.id"))
     wallet = db.relationship("Wallet", back_populates="families")
 
@@ -108,6 +107,7 @@ class Goals(db.Model):
     name = db.Column(db.String)
     price = db.Column(db.Float)
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
+    family_id = db.Column(db.Integer, db.ForeignKey("family.id"))
 
     category = db.relationship("Categories", back_populates="goals")
     family = db.relationship("Families", back_populates="goals")
@@ -119,6 +119,7 @@ class Goals(db.Model):
             "price": self.price,
             "category_id": self.category_id,
             "category": self.category,
+            "family_id": self.family_id,
             "family": self.family
         }
 

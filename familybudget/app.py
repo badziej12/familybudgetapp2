@@ -25,6 +25,7 @@ mutation.set_field("createFamily", create_family_resolver)
 mutation.set_field("deleteFamily", delete_family_resolver)
 mutation.set_field("createCategory", create_category_resolver)
 
+
 app.secret_key = 'why would I tell you my secret key?'
 
 type_defs = load_schema_from_path("schema.graphql")
