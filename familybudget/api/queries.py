@@ -98,18 +98,7 @@ def listGoals_resolver(obj, info):
 def getUser_resolver(obj, info, id):
     try:
         user = Users.query.get(id)
-        user_transactions = []
-        transactions = listTransactions_resolver(user, None)
-        print(transactions)
-        for transaction in transactions:
-            if transaction.recipient_id == int(id) or transaction.sender_id == int(id):
-                user_transactions.append(transaction)
-        
         print(user.to_dict())
-        userdict = user.to_dict()
-
-        userdict.update({"transaction": user_transactions})
-        
 
         payload = {
             "success": True,

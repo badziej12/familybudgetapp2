@@ -6,15 +6,22 @@ schema {
 
 type Mutation{
     createUser(nickname: String!, email: String!,
-     password: String! first_name: String, last_name: String, age: Int, balance: Float, created_at: String): UserResult!
+     password: String! first_name: String, last_name: String, age: Int, wallet_id: ID!, created_at: String): UserResult!
     updateUser(id: ID!, nickname: String, email: String,
-     password: String, first_name: String, last_name: String, age: Int, balance: Float): UserResult!
+     password: String, first_name: String, last_name: String, age: Int, wallet_id: ID): UserResult!
     deleteUser(id: ID): UserResult!
     newTransaction(date: String, title: String!, recipient_id: ID!,
     sender_id: ID!, ammount: Float!, category_id: ID!):TransactionResult!
     createFamily(name: String!, member_id: ID!): FamilyResult!
     deleteFamily(id: ID): FamilyResult!
     createCategory(name: String!): CategoryResult!
+    createGoal(name: String!, price: Float!, category_id: Int!): GoalResult!
+    createWallet(balance: Float!): WalletResult!
+    deleteCategory(id: ID): CategoryResult!
+    deleteWallet(id: ID): WalletResult!
+    deleteGoal(id: ID): GoalResult!
+    updateWallet(id: ID!, balance: Float!): WalletResult!
+    updateGoal(id: ID!, price: Float!): GoalResult!
 }
 
 type User {

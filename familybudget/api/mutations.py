@@ -22,10 +22,27 @@ def create_wallet_resolver(obj, info, balance):
     return payload
 
 @convert_kwargs_to_snake_case
-def update_wallet_resolver(obj, info, id, ammount):
+def delete_wallet_resolver(obj, info, id):
     try:
         wallet = Wallet.query.get(id)
-        wallet.balance += ammount
+        db.session.delete(wallet)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "wallet": wallet.to_dict()
+        }
+    except AttributeError:
+        payload = {
+            "success": False,
+            "errors": ["Wallet with id {id} does not exsist!"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def update_wallet_resolver(obj, info, id, balance):
+    try:
+        wallet = Wallet.query.get(id)
+        wallet.balance += balance
 
         db.session.add(wallet)
         db.session.commit()
@@ -60,6 +77,27 @@ def create_goal_resolver(obj, info, name, price, category_id, family_id):
         }
     return payload
 
+@convert_kwargs_to_snake_case
+def update_goal_resolver(obj, info, id, price):
+    try:
+        goal = Goals.query.get(id)
+
+        goal.price += price
+
+        db.session.add(goal)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "goal": goal.to_dict()
+        }
+    except AttributeError:
+        payload = {
+            "success": False,
+            "errors": ["Goal with id {id} not found."]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
 def delete_goal_resolver(obj, info, id):
     try:
         goal = Goals.query.get(id)
@@ -183,6 +221,24 @@ def create_category_resolver(obj, info, name):
         payload = {
             "success": False,
             "errors": ["Category {name} already exists"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def delete_category_resolver(obj, info, id):
+    try:
+        
+        category = Categories.query.get(id)
+        db.session.delete(category)
+        db.session.commit()
+        payload = {
+            "success": True,
+            "category": category.to_dict()
+        }
+    except AttributeError:
+        payload = {
+            "success": False,
+            "errors": ["Category with id {id} does not exists"]
         }
     return payload
 

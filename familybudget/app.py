@@ -4,8 +4,15 @@ from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
 from flask import request, jsonify, render_template, json, session, redirect
-from api.queries import getCategory_resolver, listCategories_resolver, listUsers_resolver, getUser_resolver, listTransactions_resolver, getTransaction_resolver, getFamily_resolver, listFamilies_resolver
-from api.mutations import create_user_resolver, update_user_resolver, delete_user_resolver, new_transaction_resolver, create_family_resolver, delete_family_resolver, create_category_resolver
+from api.queries import getCategory_resolver, listCategories_resolver, \
+ listUsers_resolver, getUser_resolver, listTransactions_resolver, \
+  getTransaction_resolver, getFamily_resolver, listFamilies_resolver, \
+    getWallet_resolver, getGoal_resolver, listGoals_resolver, listWallets_resolver
+from api.mutations import create_user_resolver, update_user_resolver, delete_user_resolver, \
+ new_transaction_resolver, create_family_resolver, delete_family_resolver, create_category_resolver, \
+    create_goal_resolver, create_wallet_resolver, delete_category_resolver, delete_goal_resolver, update_wallet_resolver, \
+        update_goal_resolver, delete_wallet_resolver
+
 
 query = ObjectType("Query")
 mutation = ObjectType("Mutation")
@@ -17,6 +24,10 @@ query.set_field("listFamilies", listFamilies_resolver)
 query.set_field("getFamily", getFamily_resolver)
 query.set_field("getCategory", getCategory_resolver)
 query.set_field("listCategories", listCategories_resolver)
+query.set_field("getWallet", getWallet_resolver)
+query.set_field("getGoal", getGoal_resolver)
+query.set_field("listWallets", listWallets_resolver)
+query.set_field("listGoals", listGoals_resolver)
 mutation.set_field("createUser", create_user_resolver)
 mutation.set_field("updateUser", update_user_resolver)
 mutation.set_field("deleteUser", delete_user_resolver)
@@ -24,6 +35,13 @@ mutation.set_field("newTransaction", new_transaction_resolver)
 mutation.set_field("createFamily", create_family_resolver)
 mutation.set_field("deleteFamily", delete_family_resolver)
 mutation.set_field("createCategory", create_category_resolver)
+mutation.set_field("createGoal", create_goal_resolver)
+mutation.set_field("createWallet", create_wallet_resolver)
+mutation.set_field("deleteCategory", delete_category_resolver)
+mutation.set_field("deleteGoal", delete_goal_resolver)
+mutation.set_field("updateWallet", update_wallet_resolver)
+mutation.set_field("updateGoal", update_goal_resolver)
+mutation.set_field("deleteWallet", delete_wallet_resolver)
 
 
 app.secret_key = 'why would I tell you my secret key?'
@@ -69,8 +87,10 @@ def signUp():
 
     # validate the received values
     if _name and _email and _password:
-        create_user_resolver(None, None, _name,_email, _password, None, None, None, 0)
-        return json.dumps({'html':'<span>All fields good !!</span>'})
+        wallet = create_wallet_resolver(None, None, 0)
+        wallet_id = wallet["wallet"]["id"]
+        create_user_resolver(None, None, _name,_email, _password, None, None, None, wallet_id)
+        return redirect('/signin')
     else:
         return json.dumps({'html':'<span>Enter the required fields</span>'})
 
@@ -90,6 +110,7 @@ def validateLogin():
         for id in range(len(user['users'])):
             if user['users'][id]['email'] == __username:
                 if user['users'][id]['password'] == __password:
+                    user['users'][id].pop("wallet")
                     session['user'] = user['users'][id]
                     return redirect('/userHome')
                 else:
@@ -101,11 +122,28 @@ def validateLogin():
 @app.route('/userHome', methods=['GET', 'POST'])
 def userHome():
     if session.get('user'):
+        user = getUser_resolver(None, None, session['user']['id'])
         transactions = listTransactions_resolver(None, None)
-        Result = reversed(transactions['transactions'])
-        ammount = session['user']['balance']
+        history = []
+        for transaction in transactions['transactions']:
+            if transaction['recipient_id'] == user['user']['wallet'].id:
+                sender = getUser_resolver(None, None, transaction['sender_id'])
+                transaction['sender'] = sender['user']['nickname']
+                transaction['recipient'] = user['user']['nickname']
+                transaction['category'] = transaction['category'].name
+                history.append(transaction)
+            elif transaction['sender_id'] == user['user']['wallet'].id:
+                recipient = getUser_resolver(None, None, transaction['recipient_id'])
+                transaction['sender'] = user['user']['nickname']
+                transaction['recipient'] = recipient['user']['nickname']
+                transaction['category'] = transaction['category'].name
+                history.append(transaction)
+
+        Nickname = session['user']['nickname']
+        Result = reversed(history)
+        ammount = user['user']['wallet'].balance
         Balance = "{:,.2f}".format(ammount)
-        return render_template('profile.html', Result=Result, Balance=Balance)
+        return render_template('history.html', Result=Result, Balance=Balance, Nickname = Nickname)
     else:
         return redirect('/signin', error = 'Unauthorized Access')
 
@@ -195,8 +233,6 @@ def families():
     print(family_name)
     
     
-    
-
     return render_template('families.html', family_name = family_name)
 
 @app.route('/families/create')

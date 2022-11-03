@@ -9,5 +9,3 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://yibymviy:nwztR5-SCou-ZgyEg
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
-
-

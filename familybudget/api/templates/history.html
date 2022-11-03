@@ -1,0 +1,138 @@
+{% extends 'userHome.html' %}
+
+{% block content %}
+<style>
+    #home{
+            background: rgba(217, 217, 217, 0.29);
+        }
+    
+    #rightside{
+        float: right;
+        width: 60%;
+        
+    }
+    #leftside{
+        float: left;
+        width: 35%;
+        height: 100%;
+        margin-right: 15px;
+        
+    }
+    #profile-image{
+        display: grid;
+    }
+    #nickname{
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 20px;
+        color: #585858;
+        margin-top: 17px;
+    }
+    
+    .balance-container{
+        margin: 50px 0;
+        background: #FFFFFF;
+        border: 2px solid #E5E5E5;
+        border-radius: 4px;
+        max-width: 308px;
+        height: 325px;
+        text-align: left;
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        line-height: 27px;
+        letter-spacing: 0.02em;
+        color: #585858;
+        display: fixed;
+        padding: 20px;
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    }
+    #avaiable{
+        width: 100%;
+        font-weight: 500;
+        font-size: 23px;
+        color: #585858;
+    }
+    #value{
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 47px;
+    }
+    #currency{
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 23px;
+        color: rgba(50, 48, 48, 0.51);
+    }
+    #ammount{
+        color: #48D367;
+    }
+    .history{
+        font-weight: 700;
+        font-size: 23px;
+        line-height: 20px;
+        color: #585858;
+    }
+
+</style>
+<div id="leftside">
+    <div id="profile-image">
+        <img src="../static/profile photo.svg"/>
+        <label id="nickname">@{{Nickname}}</label>
+    </div>
+    <div class="balance-container">
+        <div style="margin-top: 18px;">
+            <label id="avaiable">Avaiable to spend</label>
+        </div>
+        <div style="margin-top: 10px;">
+        <label id="value" for="">{{Balance}}</label>
+        <label id="currency">PLN</label>
+        </div>
+        <div style="margin-top: 100px;">
+            <img src="../static/Line 2.svg" style="width: 100%;">
+        </div>
+        <div class="pending">
+            <label>Pending</label>
+            <label id="ammount">10.00 PLN</label>
+        </div>
+    </div>
+
+</div>
+<div id = "rightside">
+    
+        <div style="margin-top: 30px;">
+            <label class="history">History</label>
+        </div>
+        <div class="hero-table">
+            <table class="transasction-table" cellspacing="0">
+                <thead>
+                    <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">From</th>
+                    <th scope="col">To</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Ammount</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        {% for result in Result %}
+                        <tr>
+                        <td scope="row" id="date">{{result['date']}}</th>
+                        <td id="recipient">{{result['sender']}}</td>
+                        <td id="sender">{{result['recipient']}}</td>
+                        <td id="title">{{result['title']}}</td>
+                        <td id="ammount">{{result['ammount']}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+            
+            </table>
+        </div>
+    
+    <div class="button">
+        <button class="new" type="submit">Add new</button>
+    </div>
+</div>
+
+{% endblock %}
