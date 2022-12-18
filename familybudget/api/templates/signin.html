@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Family Budget</title>
     <link rel="stylesheet" href="../static/style.css">
     <style>
-        #welcoming{
+        #welcoming {
             font-family: 'Roboto', sans-serif;
             font-style: normal;
             font-weight: 700;
@@ -15,41 +16,39 @@
             color: #000000;
         }
 
-        .data-form input:focus{
+        .data-form input:focus {
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             border: 1px solid #DED2FA;
         }
-   
     </style>
 </head>
+
 <body>
     <div class="background" style="height: 100vh;">
-        <div class="login-container" >
+        <div class="login-container">
             <form class="form-signin" action="/api/validateLogin" method="POST">
                 <div class="welcome-container">
-                    <label id="welcoming">Welcome Back! Login</label>
+                    <label id="welcoming">Witaj ponownie!</label>
                 </div>
                 <div class="data-form" id="Email">
-                    <label for="inputEmail">Email adrres</label> 
-                    <input type="email" name="inputEmail" id="inputEmail" placeholder="jankowalski@gmail.com" required autofocus>
+                    <label for="inputEmail">Adres e-mail</label>
+                    <input type="email" name="inputEmail" id="inputEmail" placeholder="jankowalski@gmail.com" required
+                        autofocus>
                 </div>
                 <div class="data-form" id="Password">
-                    <label for="inputPassword">Password</label> 
+                    <label for="inputPassword">Hasło</label>
                     <input type="password" name="inputPassword" id="inputPassword" placeholder="password" required>
                 </div>
-                <div style="margin-top: 17px;">
-                    <label class="information">
-                        Forgot Password? Click
-                        <a href="#">HERE</a>
-                    </label>
+                <div>
+                    <button class="login-button" type="submit">Zaloguj się</button>
                 </div>
                 <div>
-                    <button class="login-button" type="submit">Login</button>
+                    <label style="color: red; font-size:16px;">{{error}}</label>
                 </div>
                 <div style="width: 100%;">
                     <label class="information">
-                        Don't have an account yet?
-                        <a href="/signup">SIGN UP</a>
+                        Nie posiadasz jeszcze konta?
+                        <a href="/signup">ZAREJESTRUJ</a>
                     </label>
                 </div>
             </form>
@@ -62,7 +61,7 @@
 
 </body>
 <script>
-    
+
 
 </script>
 

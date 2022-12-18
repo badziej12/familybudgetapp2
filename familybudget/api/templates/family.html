@@ -1,0 +1,252 @@
+{% extends 'userHome.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="../static/family.css">
+<style>
+    #profile {
+        background: rgba(217, 217, 217, 0.29);
+    }
+</style>
+<section>
+    <a href="/profile">
+        <img src="../static/Go back.svg" alt="Back">
+    </a><a href="#">
+        <img src="../static/Settings.svg" alt="Settings">
+    </a>
+</section>
+<aside>
+    <div>
+        <h3>{{Name}}</h3>
+        {% for member in Members %}
+        <p>@{{member}}</p>
+        {% endfor %}
+        <button type="button" class="new" style="width: 37px; font-size: 18px; margin-top: 20px;"
+            onclick="openPopup(document.getElementById('modal'))">+</button>
+    </div>
+</aside>
+<main>
+    <h3>Cele</h3>
+    <section>
+        {% for i in range(0, Goals['title'].__len__()) %}
+        <div class="goal-window"
+            onclick="openGoalPopup(document.getElementById('modal-info'), '{{Goals['title'][i]}}', '{{Goals['price'][i]}}', '{{Goals['to_pay'][i]}}', 0, '{{Goals['id'][i]}}')">
+            <h2>{{Goals['title'][i]}}</h2>
+            <h1>{{Goals['to_pay'][i]}} <span>PLN</span></h1>
+            <p>of <strong>{{Goals['price'][i]}}</strong> <span>PLN</span></p>
+            <p><span class="chill">{{Goals['lasts'][i]}} dni do końca</span></p>
+        </div>
+        {% endfor %}
+    </section>
+    <div class="button">
+        <button type="button" class="new" onclick="openPopup(document.getElementById('modal-goal'))">Dodaj</button>
+        <button type="button" class="new" onclick="openPopup(document.getElementById('modal-exit'))"
+            style="float: left; background-color: red;">Opuść</button>
+    </div>
+    <div class="modal-background" id="modal" role="dialog">
+        <div id="window" style="width: 450px;">
+            <form action="{{url_for('addMember', family_id = Family_id)}}" method="POST">
+                <div class="info-container clearfix" style="margin-top: 0px;">
+                    <h2>Kogo chcesz zaprosić?</h2>
+                    <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal'))">
+                </div>
+                <div class="info-container">
+                    <input class="input-container_valid" style="float: left;" placeholder="Wprowadź nazwę użytkownika"
+                        id="inputMember" name="inputMember"
+                        oninput="titleValidation(document.getElementById('inputMember'))" required>
+                </div>
+                <div class="info-container">
+                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+                </div>
+                <p id="Error-member" class="errorText">{{error}}</p>
+            </form>
+        </div>
+    </div>
+    <div class="modal-background" id="modal-goal" role="dialog">
+        <div id="window">
+            <form action="{{url_for('addFamilyGoal', id = Family_id)}}" method="POST">
+                <div class="clearfix">
+                    <div class="info-container clearfix" style="margin-top: 0px;">
+                        <h2>Jaki jest twój cel</h2>
+                        <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-goal'))">
+                    </div>
+                    <div class="input-container" style="float: left;">
+                        <label for="inputGoalTitle">Nazwa celu</label>
+                        <input class="input-container_valid" placeholder="Wakacje" id="inputGoalTitle"
+                            name="inputGoalTitle" oninput="titleValidation(document.getElementById('inputGoalTitle'))"
+                            required>
+                    </div>
+                    <div class="input-container" style="float: right;">
+                        <label for="inputPrice">Cena</label>
+                        <input class="input-container_valid" placeholder="1000,00" id="inputPrice" name="inputPrice"
+                            oninput="titleValidation(document.getElementById('inputGoalTitle'))" required>
+                    </div>
+                    <div class="input-container" style="float: left;">
+                        <label for="inputCategory">Kategoria</label>
+                        <select class="input-container_valid" id="inputCategory" name="inputCategory">
+                            {% for category in Categories %}
+                            <option value="{{category}}">{{category}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-container" style="float: right;">
+                        <label for="inputDeadline">Do kiedy</label>
+                        <input class="input-container_valid" type="date" id="inputDeadline" name="inputDeadline">
+                    </div>
+                </div>
+                <div class="info-container">
+                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+                </div>
+                <p id="Error-goal" class="errorText">{{error}}</p>
+            </form>
+        </div>
+    </div>
+    <div class="modal-background" id="modal-exit" role="dialog">
+        <div id="window" style="width: 550px;">
+            <form action="{{url_for('leaveFamily', family_id = Family_id)}}" method="POST">
+                <div class="info-container clearfix" style="margin-top: 0px;">
+                    <h2>Na pewno chcesz opuścić rodzinę?</h2>
+                    <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-exit'))">
+                </div>
+                <p style="text-align: justify; font-size: 16px;">Opuszcenie rodziny spowoduje brak możliwości wpłat na
+                    cele rodziny.
+                    Aby wrócić do rodziny, jeden z jej członków będzie musiał Cię dodać.
+                </p>
+                <div class="info-container">
+                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-background" id="modal-info" role="dialog">
+        <div id="window" style="width: 550px;">
+            <div class="clearfix">
+                <h2 id="goal_title"></h2>
+                <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-info'))">
+            </div>
+            <p class="to-pay">Suma: <strong id="goal_price"></strong><span> PLN</span></p>
+            <h1 class="to-pay" id="goal_to_pay"></h1>
+            <p class="to-pay">Opis:</p>
+            <p class="description-box">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint nihil aut officiis
+                commodi repellendus corrupti, ipsa consectetur saepe labore molestias dolorem, consequuntur nam aperiam.
+                Vitae sunt voluptatum nisi natus ducimus?</p>
+            <div class="info-container">
+                <button class="confrim" type="submit" id="commit_button"
+                    onclick="closeGoalPopup(document.getElementById('modal-info')); openPopup(document.getElementById('modal-transaction'))">Wpłać</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-background" id="modal-transaction" role="dialog">
+        <div id="window" style="width: 400px;">
+            <form action="{{url_for('familyGoalTransaction')}}" method="POST" id="goalTransactionForm">
+                <div class="info-container" style="margin-top: 0px;">
+                    <h2>Ile chcesz przelać?</h2>
+                    <img src="../static/Go back 2.svg"
+                        onclick="closePopupFinish(document.getElementById('modal-transaction'))">
+                </div>
+                <div class="info-container">
+                    <input class="input-container_valid" style="float: left;" placeholder="Wprowadź ilość pieniędzy"
+                        id="inputAmmount" name="inputAmmount" required>
+                </div>
+                <div class="info-container">
+                    <button class="confrim" type="submit" id="pay-btn">Potwierdź</button>
+                </div>
+                <p id="Error-transaction" class="errorText">{{error}}</p>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    var deadline = document.getElementById("inputDeadline");
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    deadline.value = today;
+    let error_label = document.getElementById("Error-goal");
+    const commit_button = document.querySelector('#commit_button');
+    if (typeof error_label.textContent === 'string' && error_label.textContent.trim().length === 0) {
+        document.getElementById('modal-goal').style.visibility = "hidden";
+    } else {
+        document.getElementById('modal-goal').style.visibility = "visible";
+    }
+    let error_label_2 = document.getElementById("Error-member");
+    if (typeof error_label_2.textContent === 'string' && error_label_2.textContent.trim().length === 0) {
+        document.getElementById('modal').style.visibility = "hidden";
+    } else {
+        document.getElementById('modal').style.visibility = "visible";
+    }
+    let error_label_3 = document.getElementById("Error-transaction");
+    if (typeof error_label_3.textContent === 'string' && error_label_3.textContent.trim().length === 0) {
+        document.getElementById('modal-transaction').style.visibility = "hidden";
+    } else {
+        document.getElementById('modal-transaction').style.visibility = "visible";
+    }
+    let lastSpan = document.querySelectorAll('.chill');
+    for (let elem of lastSpan) {
+        let text = elem.innerHTML.split(" ");
+        if (parseInt(text[0]) < 4) {
+            elem.className = "warning";
+        } else if (parseInt(text[0]) > 3 && parseInt(text[0]) < 8) {
+            elem.className = "closer";
+        }
+    }
+
+
+    function openGoalPopup(modal, title, price, to_pay, description, goal_id) {
+        document.getElementById('goal_title').innerHTML = title;
+        document.getElementById('goal_price').innerHTML = price;
+        document.getElementById('goal_to_pay').innerHTML = "<span>Musisz zapłacić: </span>" + to_pay + "<span> PLN</span>";
+        modal.style.visibility = "visible";
+        console.log(goal_id);
+        var goal_id_info = document.createElement("input");
+        goal_id_info.id = "inputGoalID"
+        goal_id_info.value = goal_id;
+        goal_id_info.name = "inputGoalID";
+        goal_id_info.style.display = "none";
+        document.getElementById("goalTransactionForm").appendChild(goal_id_info);
+    }
+    function closeGoalPopup(modal) {
+        modal.style.visibility = "hidden";
+        console.log("dziala");
+    }
+
+    function openPopup(modal) {
+        modal.style.visibility = "visible";
+        console.log("dziala");
+    }
+    function closePopup(modal) {
+        modal.style.visibility = "hidden";
+        console.log("dziala");
+    }
+
+    function closePopupFinish(modal) {
+        modal.style.visibility = "hidden";
+        document.getElementById("inputGoalID").remove();
+        console.log("działa")
+    }
+
+    function stringHasOnlyLetters(_string) {
+        let matchPattern = /^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$/.test(_string);
+        if (matchPattern != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    var titleValidation = function (input_id) {
+        if (input_id.value != "" && input_id.value.length < 20 && stringHasOnlyLetters(input_id.value) == true) {
+            input_id.className = "input-container_valid";
+            commit_button.disabled = false;
+        } else {
+            input_id.className = "input-container_invalid";
+            commit_button.disabled = true;
+        }
+    }
+</script>
+
+{% endblock %}

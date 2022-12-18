@@ -280,13 +280,10 @@
                 {% for goal in Goals %}
                 <div class="goal-window"
                     onclick="openGoalPopup(document.getElementById('modal-info'), '{{goal['title']}}', '{{goal['price']}}', '{{goal['to_pay']}}', 0, '{{goal['id']}}')">
-                    <div class="goal-pay">
-                        <h2>{{goal['title']}}</h2>
-                        <h1>{{goal['to_pay']}} <span>PLN</span></h1>
-                        <p>z <strong>{{goal['price']}}</strong> <span>PLN</span></p>
-                    </div>
+                    <h2>{{goal['title']}}</h2>
+                    <h1>{{goal['to_pay']}} <span>PLN</span></h1>
+                    <p>z <strong>{{goal['price']}}</strong> <span>PLN</span></p>
                     <p><span class="chill">{{goal['lasts']}} dni do końca</span></p>
-
                 </div>
                 {% endfor %}
             </section>

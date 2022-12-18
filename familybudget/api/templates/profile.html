@@ -2,13 +2,308 @@
 
 {% block content %}
 <style>
-    
+    #profile {
+        background: rgba(217, 217, 217, 0.29);
+    }
+
+    #options {
+        max-width: 100%;
+        height: 40px;
+    }
+
+    #left-side {
+        margin-top: 40px;
+        float: left;
+        width: 30%;
+    }
+
+    #profile-info {
+        display: grid;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 20px;
+        color: #585858;
+    }
+
+    #right-side {
+        margin-top: 40px;
+        float: right;
+        width: 60%;
+        padding-right: 60px;
+        height: 80%;
+    }
+
+    #label-container {
+        width: 100%;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 20px;
+        color: #585858;
+    }
+
+    .family-container {
+        width: 100%;
+        margin: 30px 0;
+        background: #E5E5E5;
+        border-radius: 5px;
+        height: 80px;
+        padding: 10px;
+        transition: 0.2s;
+
+    }
+
+    .family-container:hover {
+        background: #EEECF3;
+        border-radius: 7px;
+        filter: drop-shadow(6px 6px 6px #DED9D9);
+        cursor: pointer;
+    }
+
+    .family-name {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 20px;
+        color: #585858;
+        width: 100%;
+        text-align: left;
+    }
+
+    .family-members {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        color: #585858;
+        width: 100%;
+        text-align: left;
+        margin-top: 10px;
+    }
+
+    a {
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .new {
+        width: 126px;
+        height: 36px;
+        background: #48D367;
+        border-radius: 20px;
+        border: none;
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 21px;
+        color: #FFFFFF;
+        cursor: pointer;
+        float: right;
+        transition: 0.2s;
+
+    }
+
+    .new:hover {
+        background: #3abe57;
+    }
+
+    .modal-background {
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.507);
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        text-align: center;
+        padding: 0 30px 30px;
+        color: #333;
+        visibility: hidden;
+    }
+
+    #window {
+        background: #F6F2FF;
+        border: 1px solid #000000;
+        border-radius: 10px;
+        width: 700px;
+        padding: 45px 40px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        position: absolute;
+    }
+
+    #window label {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 20px;
+        color: #585858;
+        float: left;
+        margin: 10px 0;
+    }
+
+    #window img {
+        float: right;
+        cursor: pointer;
+    }
+
+    #window p {
+        color: red;
+        margin: 10px 0;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .info-container {
+        height: 40px;
+        margin: 35px 0px;
+    }
+
+    .input-container_valid {
+        background: #FFFFFF;
+        border: 1px solid #E5E5E5;
+        border-radius: 5px;
+        height: 40px;
+        width: 100%;
+        padding: 10px;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 17px;
+        line-height: 20px;
+        color: #8B8B8B;
+    }
+
+    .input-container_invalid {
+        background: #FFFFFF;
+        border: 1px solid #ff0000;
+        border-radius: 5px;
+        height: 40px;
+        width: 280px;
+        padding: 10px;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 17px;
+        line-height: 20px;
+        color: #8B8B8B;
+    }
+
+    .confrim {
+        background: #48D367;
+        border-radius: 20px;
+        height: 40px;
+        width: 100%;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 21px;
+        color: #FFFFFF;
+        border: none;
+        cursor: pointer;
+    }
+
+    .confrim:disabled,
+    .confrim[disabled] {
+        background: #9dfab1;
+        cursor: not-allowed;
+    }
 </style>
 
+<div id="options">
+    <a href="/userHome">
+        <img src="../static/Go back.svg" style="float: left;">
+    </a>
+    <a href="/profile/settings">
+        <img src="../static/Settings.svg" style="float: right;">
+    </a>
+</div>
 
+<div id="left-side">
+    <div id="profile-info">
+        <img src="../static/profile photo.svg">
+        <h2 id="nickname" style="font-size:20px; margin-top: 10px;">@{{Nickname}}</h2>
+    </div>
+</div>
+<div id="right-side">
+    <div id="label-container">
+        <label>Rodziny</label>
+    </div>
+    {% for i in range(0, Families_data['family_name'].__len__()) %}
+    <a href="{{url_for('familyShow', family_id=User_families[i])}}">
+        <div class="family-container" id="{{User_families[i]}}">
+            <div class="family-name">
+                <label>{{Families_data['family_name'][i]}}</label>
+            </div>
+            <div class="family-members">
+                <label>
+                    {% for member in Families_data['members'][i] %}
+                    {{member}}
+                    {% endfor %}
+                </label>
+            </div>
 
+        </div>
+    </a>
+    {% endfor %}
+    <button type="button" class="new" onclick="openPopup()">Dodaj</button>
 
+    <div class="modal-background" id="modal" role="dialog">
+        <div id="window">
+            <form action="/api/createFamily" method="POST">
+                <div class="info-container" style="margin-top: 0px;">
+                    <label>Wpisz nazwę rodziny</label>
+                    <img src="../static/Go back 2.svg" onclick="closePopup()">
+                </div>
+                <div class="info-container">
+                    <input class="input-container_valid" style="float: left;" placeholder="Enter family name"
+                        id="inputFamily" name="inputFamily"
+                        oninput="titleValidation(document.getElementById('inputFamily'))" required>
+                </div>
+                <div class="info-container">
+                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+                </div>
+                <p id="Error">{{error}}</p>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    let popup = document.getElementById("modal");
+    let error_label = document.getElementById("Error");
+    const commit_button = document.querySelector('#commit_button');
+    if (typeof error_label.textContent === 'string' && error_label.textContent.trim().length === 0) {
+        popup.style.visibility = "hidden";
+    } else {
+        popup.style.visibility = "visible";
+    }
+    function openPopup() {
+        popup.style.visibility = "visible";
+        console.log("dziala");
+    }
+    function closePopup() {
+        popup.style.visibility = "hidden";
+        console.log("dziala");
+    }
 
+    function stringHasOnlyLetters(_string) {
+        let matchPattern = /^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$/.test(_string);
+        if (matchPattern != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    var titleValidation = function (input_id) {
+        if (input_id.value != "" && input_id.value.length < 20 && stringHasOnlyLetters(input_id.value) == true) {
+            input_id.className = "input-container_valid";
+            commit_button.disabled = false;
+        } else {
+            input_id.className = "input-container_invalid";
+            commit_button.disabled = true;
+        }
+    }
+</script>
 
 
 

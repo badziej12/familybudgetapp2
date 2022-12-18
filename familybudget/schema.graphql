@@ -5,23 +5,24 @@ schema {
 
 
 type Mutation{
-    createUser(nickname: String!, email: String!,
-     password: String! first_name: String, last_name: String, age: Int, wallet_id: ID!, created_at: String): UserResult!
-    updateUser(id: ID!, nickname: String, email: String,
-     password: String, first_name: String, last_name: String, age: Int, wallet_id: ID): UserResult!
-    deleteUser(id: ID): UserResult!
-    newTransaction(date: String, title: String!, recipient_id: ID!,
-    sender_id: ID!, ammount: Float!, category_id: ID!):TransactionResult!
+    createUser(nickname: String!, email: String!, password: String!): UserResult!
+    updateUser(id: ID!, nickname: String, email: String, password: String): UserResult!
+    deleteUser(id: ID!): UserResult!
+    newTransaction(title: String!, wallet_id: ID!,
+    ammount: Float!, category_id: ID!, goal_id: ID):TransactionResult!
     createFamily(name: String!, member_id: ID!): FamilyResult!
-    deleteFamily(id: ID): FamilyResult!
+    deleteFamily(id: ID!): FamilyResult!
     createCategory(name: String!): CategoryResult!
-    createGoal(name: String!, price: Float!, category_id: Int!): GoalResult!
-    createWallet(balance: Float!): WalletResult!
-    deleteCategory(id: ID): CategoryResult!
-    deleteWallet(id: ID): WalletResult!
-    deleteGoal(id: ID): GoalResult!
-    updateWallet(id: ID!, balance: Float!): WalletResult!
-    updateGoal(id: ID!, price: Float!): GoalResult!
+    createGoal(deadline: String! name: String!, price: Float!, description: String, wallet_id: ID, category_id: Int!, family_id: ID): GoalResult!
+    createWallet(balance: Float!, month: Int!, user_id: ID!): WalletResult!
+    deleteCategory(id: ID!): CategoryResult!
+    deleteWallet(id: ID!): WalletResult!
+    deleteGoal(id: ID!): GoalResult!
+    updateWallet(id: ID!, balance: Float, month: String): WalletResult!
+    updateGoal(id: ID!, deadline: String, name: String, price: Float, description: String): GoalResult!
+    addFamilyMember(member_id: ID!, family_id: ID!): MemberResult!
+    deleteFamilyMember(user_id: ID!, family_id: ID!): MemberResult!
+    deleteTransaction(id: ID!): TransactionResult!
 }
 
 type User {
@@ -29,36 +30,29 @@ type User {
     nickname: String!
     email: String!
     password: String!
-    first_name: String!
-    last_name: String!
-    age: Int!
-    wallet_id: String!
-    wallet: Wallet!
+    wallet: [Wallet]
     created_at: String!
-    family: [Family]
+    families: [Member]
 }
 
 type Transaction{
     id: ID!
     date: String!
     title: String!
-    recipient: Wallet!
-    recipient_id: String!
-    sender: Wallet!
-    sender_id: String!
+    wallet_id: ID!
+    wallet: Wallet!
     ammount: Float!
     category_id: String!
     category: Category!
+    goal_id: String
+    goal: Goal
 }
 
 type Family{
     id: ID!
     name: String!
-    goal_id: String
-    goal: [Goal]
-    wallet_id: String!
-    wallet: Wallet!
-    members: [User!] 
+    goals: [Goal]
+    members: [Member!] 
 }
 
 type Category{
@@ -67,22 +61,48 @@ type Category{
     transaction: [Transaction]
 }
 
+type Member{
+    user_id: String!
+    family_id: String!
+    user: User!
+    family: Family!
+}
+
 type Wallet{
     id: ID!
     balance: Float!
-    users: User!
-    families: Family!
-    outcome: [Transaction]
-    income: [Transaction]
+    month: Int!
+    user_id: ID!
+    user: User!
+    goals: [Goal]
+    transaction: [Transaction]
 }
 
 type Goal{
     id: ID!
+    created_at: String!
+    deadline: String!
     name: String!
     price: Float!
+    description: String
     category_id: String!
     category: Category!
-    family: Family!
+    wallet_id: ID
+    wallet: Wallet
+    family_id: String
+    family: Family
+}
+
+type MemberResult{
+    success: Boolean!
+    errors: [String]
+    member: Member
+}
+
+type MembersResult{
+    success: Boolean!
+    errors: [String]
+    members: [Member]
 }
 
 type TransactionResult {
@@ -170,8 +190,10 @@ type Query {
     listCategories: CategoriesResult!
     getCategory(id: ID!): CategoryResult!
     listGoals: GoalsResult!
+    listMembers: MembersResult!
     getGoal(id: ID!): GoalResult!
     listWallets: WalletsResult!
     getWallet(id: ID!): WalletResult!
+    getMember(user_id: ID!, family_id: ID!): MemberResult!
 }
 

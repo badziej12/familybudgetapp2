@@ -1,5 +1,22 @@
-from .models import Families, Users, Transactions, Categories, Wallet, Goals
+from .models import Families, Users, Transactions, Categories, Wallet, Goals, Members
 from ariadne import convert_kwargs_to_snake_case
+
+def listFamilyMembers_resolver(obj, info, id):
+    try:
+        members = [member.to_dict() for member in Members.query.all()]
+        print(members)
+        payload = {
+            "success": True,
+            "errors": [str(error)]
+        }
+        
+    
+    except Exception as error:
+        payload = {
+                "success": False,
+                "errors": [str(error)]
+        }
+    return payload
 
 def listUsers_resolver(obj, info):
     try:
@@ -21,7 +38,6 @@ def listTransactions_resolver(obj, info):
         transactions = [transaction.to_dict() for transaction in Transactions.query.all()]
         
         print(transactions)
-        print(len(transactions))
         payload = {
             "success": True,
             "transactions": transactions
@@ -39,7 +55,7 @@ def listFamilies_resolver(obj, info):
         print(families)
         payload = {
             "success": True,
-            "family": families
+            "families": families
         }
     except Exception as error:
         payload = {
@@ -82,7 +98,7 @@ def listWallets_resolver(obj, info):
 def listGoals_resolver(obj, info):
     try:
         goals = [goal.to_dict() for goal in Goals.query.all()]
-        print(Goals)
+        print(goals)
         payload = {
             "success": True,
             "goals": goals
@@ -94,11 +110,29 @@ def listGoals_resolver(obj, info):
         }
     return payload
 
+def listMembers_resolver(obj, info):
+    try:
+        members = [member.to_dict() for member in Members.query.all()]
+        print(members)
+        
+        payload = {
+            "success": True,
+            "members": members
+        }
+
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
+        
+
 @convert_kwargs_to_snake_case
 def getUser_resolver(obj, info, id):
     try:
         user = Users.query.get(id)
-        print(user.to_dict())
+        print(user)
 
         payload = {
             "success": True,
@@ -108,6 +142,23 @@ def getUser_resolver(obj, info, id):
         payload = {
             "success": False,
             "errors": ["Users item matching {id} not found"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def getMember_resolver(obj, info, user_id, family_id):
+    try:
+        member = Members.query.get([user_id, family_id])
+        print(member.to_dict())
+
+        payload = {
+            "success": True,
+            "member": member.to_dict()
+        }
+    except AttributeError: # todo not found
+        payload = {
+            "success": False,
+            "errors": ["Member item matching {id} not found"]
         }
     return payload
 

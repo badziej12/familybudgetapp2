@@ -4,32 +4,32 @@ html,
     margin: 0;
 }
 
-body{
+body {
     position: relative;
     height: 100%;
     font-family: 'Roboto', sans-serif;
 }
 
-.nav-container{
+.nav-container {
     height: 54px;
     background: #3D159C;
     box-shadow: 0px 4px 4px rgba(50, 48, 48, 0.51);
 }
 
-.wrapper{
-    max-width: 1200px;
+.wrapper {
+    max-width: 1366px;
     margin: 0 auto;
-    
+
 
 }
 
-.background{
+.background {
     background: linear-gradient(117.69deg, #753FF6 15.55%, #9E76FF 115.48%, rgba(117, 63, 246, 0) 115.49%);
     padding: 37px;
     height: calc(100vh - 54px);
 }
 
-nav{
+nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -37,25 +37,25 @@ nav{
     height: 54px;
 }
 
-nav ul{
+nav ul {
     display: flex;
-    
+
 }
 
-.nav-items li{
+.nav-items li {
     list-style: none;
     margin-right: 100px;
-    
+
 }
 
-.nav-items li a{
+.nav-items li a {
     font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 15px;
     line-height: 18px;
     color: #FFFFFF;
-    text-decoration: none ;
+    text-decoration: none;
 }
 
 /* Header */
@@ -72,7 +72,7 @@ nav ul{
     height: calc(100% - 54px);
 }
 
-.hero-content{
+.hero-content {
     padding: 40px;
     margin: 0 auto;
     max-width: 621px;
@@ -83,12 +83,12 @@ nav ul{
 
 }
 
-header{
+header {
     align-items: center;
     justify-content: space-between;
 }
 
-header h1{
+header h1 {
     font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 700;
@@ -99,10 +99,9 @@ header h1{
     color: #FFFFFF;
 }
 
-.transasction-table{
-    margin-top: 35px;
+.transasction-table {
     margin-bottom: 35px;
-    font-family: 'Roboto',sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
@@ -114,36 +113,86 @@ header h1{
     background-color: #F6F2FF;
     border-collapse: separate;
     border-spacing: 0 17px;
-    
+
 }
 
+.input-container {
+    width: 48%;
+    text-align: left;
+}
+
+.input-container label {
+    font-size: 16px;
+    width: 100%;
+    color: #585858;
+    font-weight: 500;
+    margin: 20px 0;
+}
+
+.input-container input,
+select {
+    margin: 10px 0;
+}
+
+.calendar {
+    margin: 0 auto;
+    max-width: 308px;
+    height: 200px;
+    background-color: #E5E5E5;
+}
+
+.calendar a {
+    float: left;
+    height: calc(200px/3);
+    text-align: center;
+    line-height: calc(200px/3);
+    width: 25%;
+    text-decoration: none;
+    color: #585858;
+    font-size: 16px;
+}
+
+.calendar a:hover {
+    border: 1px solid white;
+}
+
+.goal-pay {
+    box-sizing: content-box;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
 
 tr:nth-child(even) {
     background-color: #E5E5E5;
 }
 
-td{
-    padding-left: 18px;
+td {
+    padding: 0 20px;
 }
 
-tr{
+tr {
     height: 33px;
     border-spacing: 0 5px;
     background: #FFFFFF;
 }
 
-th{
+th {
+    width: 20%;
     height: 70px;
     background-color: #F6F2FF;
-    padding-left: 18px;
-
+    padding: 20px;
 }
 
-.button{
+th:nth-child(2) {
+    width: 60%;
+}
+
+.button {
     text-align: right;
 }
 
-.new{
+.new {
     width: 126px;
     height: 36px;
     background: #48D367;
@@ -158,13 +207,13 @@ th{
     cursor: pointer;
 }
 
-.new:active{
+.new:active {
     background: #3abe57;
 }
 
 /* Sign in */
 
-.login-container{
+.login-container {
     max-width: 450px;
     height: 390px;
     margin: 150px auto;
@@ -179,17 +228,17 @@ th{
     vertical-align: middle;
     text-align: center;
 }
-.welcome-container{
+
+.welcome-container {
     text-align: center;
 }
 
-.data-form{
-    margin-top: 32px;
-    margin-left: 73px;
-    margin-right: 73px;
+.data-form {
+    margin: 30px 70px;
     position: relative;
 }
-.data-form input{
+
+.data-form input {
     background: #FFFFFF;
     border: 1px solid #DED2FA;
     border-radius: 10px;
@@ -204,7 +253,7 @@ th{
     width: 100%;
 }
 
-.data-form label{
+.data-form label {
     position: absolute;
     font-family: 'Roboto', sans-serif;
     font-style: normal;
@@ -215,11 +264,11 @@ th{
     margin: 7px 12px;
 }
 
-.data-form.active label{
+.data-form.active label {
     overflow: hidden;
 }
 
-.information{
+.information {
     text-align: center;
     font-family: 'Roboto', sans-serif;
     font-style: normal;
@@ -229,11 +278,13 @@ th{
     color: #8B8B8B;
     margin: 30px auto;
 }
-.information a{
+
+.information a {
     text-decoration: none;
     color: rgba(117, 63, 246, 1)
 }
-.login-button{
+
+.login-button {
     background: #48D367;
     border-radius: 20px;
     width: 314px;
@@ -249,7 +300,13 @@ th{
     transition: background 0.25s;
 }
 
-.login-button:active{
+.login-button:active {
     background: #3BC65A;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
 }
