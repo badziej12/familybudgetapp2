@@ -5,16 +5,24 @@ schema {
 
 
 type Mutation{
-    createUser(nickname: String!, email: String!,
-     password: String! first_name: String, last_name: String, age: Int, balance: Float, created_at: String): UserResult!
-    updateUser(id: ID!, nickname: String, email: String,
-     password: String, first_name: String, last_name: String, age: Int, balance: Float): UserResult!
-    deleteUser(id: ID): UserResult!
-    newTransaction(date: String, title: String!, recipient_id: ID!,
-    sender_id: ID!, ammount: Float!, category_id: ID!):TransactionResult!
+    createUser(nickname: String!, email: String!, password: String!): UserResult!
+    updateUser(id: ID!, nickname: String, email: String, password: String): UserResult!
+    deleteUser(id: ID!): UserResult!
+    newTransaction(title: String!, wallet_id: ID!,
+    ammount: Float!, category_id: ID!, goal_id: ID):TransactionResult!
     createFamily(name: String!, member_id: ID!): FamilyResult!
-    deleteFamily(id: ID): FamilyResult!
+    deleteFamily(id: ID!): FamilyResult!
     createCategory(name: String!): CategoryResult!
+    createGoal(deadline: String! name: String!, price: Float!, description: String, wallet_id: ID, category_id: Int!, family_id: ID): GoalResult!
+    createWallet(balance: Float!, month: Int!, user_id: ID!): WalletResult!
+    deleteCategory(id: ID!): CategoryResult!
+    deleteWallet(id: ID!): WalletResult!
+    deleteGoal(id: ID!): GoalResult!
+    updateWallet(id: ID!, balance: Float, month: String): WalletResult!
+    updateGoal(id: ID!, deadline: String, name: String, price: Float, description: String): GoalResult!
+    addFamilyMember(member_id: ID!, family_id: ID!): MemberResult!
+    deleteFamilyMember(user_id: ID!, family_id: ID!): MemberResult!
+    deleteTransaction(id: ID!): TransactionResult!
 }
 
 type User {
@@ -22,37 +30,79 @@ type User {
     nickname: String!
     email: String!
     password: String!
-    first_name: String!
-    last_name: String!
-    age: Int!
-    balance: Float!
+    wallet: [Wallet]
     created_at: String!
-    income: [Transaction]
-    outcome: [Transaction]
-    family: [Family]
+    families: [Member]
 }
 
 type Transaction{
     id: ID!
     date: String!
     title: String!
-    recipient: User!
-    recipient_id: String!
-    sender: User!
-    sender_id: String!
+    wallet_id: ID!
+    wallet: Wallet!
     ammount: Float!
+    category_id: String!
+    category: Category!
+    goal_id: String
+    goal: Goal
 }
 
 type Family{
     id: ID!
     name: String!
-    member: [User!] 
+    goals: [Goal]
+    members: [Member!] 
 }
 
 type Category{
     id: ID!
     name: String!
-    transaction: [Transaction!]
+    transaction: [Transaction]
+}
+
+type Member{
+    user_id: String!
+    family_id: String!
+    user: User!
+    family: Family!
+}
+
+type Wallet{
+    id: ID!
+    balance: Float!
+    month: Int!
+    user_id: ID!
+    user: User!
+    goals: [Goal]
+    transaction: [Transaction]
+}
+
+type Goal{
+    id: ID!
+    created_at: String!
+    deadline: String!
+    name: String!
+    price: Float!
+    description: String
+    category_id: String!
+    category: Category!
+    wallet_id: ID
+    wallet: Wallet
+    family_id: String
+    family: Family
+}
+
+type MemberResult{
+    success: Boolean!
+    errors: [String]
+    member: Member
+}
+
+type MembersResult{
+    success: Boolean!
+    errors: [String]
+    members: [Member]
 }
 
 type TransactionResult {
@@ -88,7 +138,7 @@ type FamilyResult{
 type FamiliesResult{
     success: Boolean!
     errors: [String]
-    family: [Family]
+    families: [Family]
 }
 
 type CategoryResult{
@@ -100,8 +150,34 @@ type CategoryResult{
 type CategoriesResult{
     success: Boolean!
     errors: [String]
-    category: [Category]
+    categories: [Category]
 }
+
+type GoalResult{
+    success: Boolean!
+    errors: [String]
+    goal: Goal
+}
+
+type GoalsResult{
+    success: Boolean!
+    errors: [String]
+    goals: [Goal]
+}
+
+type WalletsResult{
+    success: Boolean!
+    errors: [String]
+    wallets: [Wallet]
+}
+
+type WalletResult{
+    success: Boolean!
+    errors: [String]
+    wallet: Wallet
+}
+
+
 
 
 type Query {
@@ -113,5 +189,11 @@ type Query {
     getFamily(id:ID!): FamilyResult!
     listCategories: CategoriesResult!
     getCategory(id: ID!): CategoryResult!
+    listGoals: GoalsResult!
+    listMembers: MembersResult!
+    getGoal(id: ID!): GoalResult!
+    listWallets: WalletsResult!
+    getWallet(id: ID!): WalletResult!
+    getMember(user_id: ID!, family_id: ID!): MemberResult!
 }
 

@@ -1,0 +1,581 @@
+{% extends 'userHome.html' %}
+
+{% block content %}
+<style>
+    #home {
+        background: rgba(217, 217, 217, 0.29);
+    }
+
+    #rightside {
+        float: right;
+        width: 70%;
+        height: 100%;
+
+    }
+
+    #leftside {
+        float: left;
+        width: 25%;
+        height: 100%;
+    }
+
+    #profile-image {
+        display: grid;
+    }
+
+    #nickname {
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 20px;
+        color: #585858;
+        margin-top: 17px;
+    }
+
+    .balance-container {
+        margin: 50px auto;
+        background: #FFFFFF;
+        border: 2px solid #E5E5E5;
+        border-radius: 4px;
+        max-width: 308px;
+        height: 325px;
+        text-align: left;
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        line-height: 27px;
+        letter-spacing: 0.02em;
+        color: #585858;
+        display: fixed;
+        padding: 30px 20px;
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    }
+
+    #avaiable {
+        width: 100%;
+        font-weight: 500;
+        font-size: 23px;
+        color: #585858;
+    }
+
+    #value {
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 47px;
+    }
+
+    #currency {
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 23px;
+        color: rgba(50, 48, 48, 0.51);
+    }
+
+    #ammount {
+        color: #48D367;
+    }
+
+    .history {
+        width: 35%;
+        float: right;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 23px;
+        line-height: 50px;
+        color: #DEEAF0;
+        background: #3C859E;
+        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .history-clicked {
+        width: 35%;
+        float: right;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 23px;
+        line-height: 50px;
+        color: #DEEAF0;
+        background: #3C859E;
+        cursor: pointer;
+        box-shadow: inset 0px 1px 10px rgba(0, 0, 0, 0.29);
+        transition: 0.2s;
+    }
+
+
+
+    .modal-background {
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.507);
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        text-align: center;
+        padding: 0 30px 30px;
+        color: #333;
+        visibility: hidden;
+        vertical-align: middle;
+    }
+
+    .confrim {
+        background: #48D367;
+        border-radius: 20px;
+        height: 40px;
+        width: 100%;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 21px;
+        color: #FFFFFF;
+        border: none;
+        margin: 20px 0;
+        cursor: pointer;
+    }
+
+    .confrim:disabled,
+    .confrim[disabled] {
+        background: #9dfab1;
+        cursor: not-allowed;
+    }
+
+    .hero-table {
+        overflow-y: scroll;
+        margin: 20px 0;
+        height: 580px;
+    }
+
+    #incoming {
+        display: none;
+    }
+
+    .incoming {
+        display: block;
+        margin: 20px 0;
+        height: 550px;
+    }
+
+    .transaction input {
+        margin: 10px auto;
+    }
+
+    .transaction select {
+        margin: 10px auto;
+    }
+
+    .history-head {
+        float: left;
+        line-height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .toolbar {
+        background: #FFFFFF;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        padding: 15px;
+    }
+
+    .sort {
+        line-height: 60px;
+        float: left;
+    }
+
+    .head3 {
+        margin: 0;
+        font-size: 18px;
+    }
+</style>
+<div id="leftside">
+    <div id="profile-image">
+        <img src="../static/profile photo.svg" />
+        <label id="nickname">@{{Nickname}}</label>
+    </div>
+    <div class="balance-container">
+        <h2>{{Month}}</h2>
+        <div style="margin-top: 18px;">
+            <label id="avaiable">Dostępne środki</label>
+        </div>
+        <div style="margin-top: 10px;">
+            <label id="value" for="">{{Balance}}</label>
+            <label id="currency">PLN</label>
+        </div>
+        <p style="margin-top: 30px;">Do zapłaty: <strong>{{Incoming}}</strong><span> PLN</span></p>
+        <div>
+            <img src="../static/Line 2.svg" style="width: 100%;">
+        </div>
+        <div class="pending">
+            <button class="new" style="width: 38px;"
+                onclick="openPopup(document.getElementById('modal-fill'))">+</button>
+        </div>
+    </div>
+    <div class="calendar">
+        <a href="/wallet/1">sty</a>
+        <a href="/wallet/2">lut</a>
+        <a href="/wallet/3">mar</a>
+        <a href="/wallet/4">kwi</a>
+        <a href="/wallet/5">maj</a>
+        <a href="/wallet/6">cze</a>
+        <a href="/wallet/7">lip</a>
+        <a href="/wallet/8">sie</a>
+        <a href="/wallet/9">wrz</a>
+        <a href="/wallet/10">paź</a>
+        <a href="/wallet/11">lis</a>
+        <a href="/wallet/12">gru</a>
+    </div>
+
+</div>
+<div id="rightside">
+
+    <div class="toolbar">
+        <div class="clearfix" style="border-bottom: 1px solid #e5e5e5;">
+            <h2 class="history-head">Transakcje</h2>
+            <p class="history" id="p-btn-2"
+                onclick="switchWindows(document.getElementById('hero-table'), document.getElementById('incoming'), document.getElementById('p-btn-2'), document.getElementById('p-btn-1'))">
+                Nadchodzące</p>
+            <p class="history-clicked" id="p-btn-1" style="margin-right: 30px;"
+                onclick="switchWindows(document.getElementById('incoming'), document.getElementById('hero-table'), document.getElementById('p-btn-1'), document.getElementById('p-btn-2'))">
+                Historia
+            </p>
+        </div>
+        <div class="clearfix">
+            <h3 class="sort head3">Sortuj według</h3>
+            <select class="select-container" onchange="sortDiv.call(this, event)" oncanplay="sortDivAscending()">
+                <option value="Data malejąco">Data malejąco</option>
+                <option value="Data rosnąco">Data rosnąco</option>
+            </select>
+        </div>
+    </div>
+    <div id="hero-table">
+        <div class=" hero-table">
+            <table class="transasction-table" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th scope="col">Data</th>
+                        <th scope="col">Tytuł</th>
+                        <th scope="col" style="text-align: right;">Kwota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in Result %}
+                    <tr>
+                        <td scope="row" id="date">{{result['date']}}</th>
+                        <td id="title">{{result['title']}}</td>
+                        <td id="ammount" style="text-align: right;">{{result['ammount']}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+        <div class=" button">
+            <button type="button" class="new" onclick="openPopup(document.getElementById('modal'))">Nowa</button>
+        </div>
+    </div>
+    <div id="incoming" style="margin-top: 35px;">
+        <div class="incoming">
+            <section id="goal-section">
+                {% for goal in Goals %}
+                <div class="goal-window"
+                    onclick="openGoalPopup(document.getElementById('modal-info'), '{{goal['title']}}', '{{goal['price']}}', '{{goal['to_pay']}}', 0, '{{goal['id']}}')">
+                    <div class="goal-pay">
+                        <h2>{{goal['title']}}</h2>
+                        <h1>{{goal['to_pay']}} <span>PLN</span></h1>
+                        <p>z <strong>{{goal['price']}}</strong> <span>PLN</span></p>
+                    </div>
+                    <p><span class="chill">{{goal['lasts']}} dni do końca</span></p>
+
+                </div>
+                {% endfor %}
+            </section>
+        </div>
+        <div class="button">
+            <button type="button" class="new" onclick="openPopup(document.getElementById('modal-goal'))">Dodaj</button>
+        </div>
+    </div>
+
+
+    <div class="modal-background" id="modal" role="dialog">
+        <div id="window">
+            <form action="{{url_for('newTransaction', wallet_id = Wallet_id)}}" method="POST" class="transaction">
+                <div class="info-container" style="margin-top: 0px;">
+                    <h2>Wprowadź dane transakcji</h2>
+                    <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal'))">
+                </div>
+                <input class="input-container_valid" placeholder="Tytuł transakcji" id="inputTitle" name="inputTitle"
+                    oninput="titleValidation(document.getElementById('inputTitle'))" required>
+                <input type="number" class="input-container_valid" placeholder="Kwota" id="inputAmmount"
+                    name="inputAmmount" oninput="ammountValidation(document.getElementById('inputAmmount'))" required>
+                <select class="input-container_valid" id="inputCategory" name="inputCategory">
+                    {% for category in Categories %}
+                    <option value="{{category}}">{{category}}</option>
+                    {% endfor %}
+                </select>
+
+
+                <button class="confrim" type="submit" id="commit_button">Potwierź</button>
+
+                <div class="info-container"
+                    style="text-align: center; margin-top: 0px; display: flex; justify-content: center;">
+                    <label style="color: red; font-size:16px; text-align: center;" id="Error">{{error}}</label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-background" id="modal-fill" role="dialog">
+        <div id="window" style="height: auto; width: 400px;">
+            <form action="{{url_for('addBalance', wallet_id = Wallet_id)}}" method="POST">
+                <div class="info-container" style="margin-top: 0px;">
+                    <h2>Wprowadź środki</h2>
+                    <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-fill'))">
+                </div>
+                <input class="input-container_valid" type="text" name="inputBalance" id="inputBalance">
+                <div class="info-container">
+                    <button class="confrim" type="submit" id="commit_button">Confrim</button>
+                </div>
+                <div class="info-container"
+                    style="text-align: center; margin: 0; display: flex; justify-content: center;">
+                    <label style="color: red; font-size:16px; text-align: center;" id="Error">{{error}}</label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-background" id="modal-goal" role="dialog">
+        <div id="window">
+            <form action="{{url_for('addGoal', id = Wallet_id)}}" method="POST">
+                <div class="clearfix">
+                    <div class="info-container clearfix" style="margin-top: 0px;">
+                        <h2>Jaki jest twój cel</h2>
+                        <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-goal'))">
+                    </div>
+                    <div class="input-container" style="float: left;">
+                        <label for="inputGoalTitle">Nazwa celu</label>
+                        <input class="input-container_valid" placeholder="Wakacje" id="inputGoalTitle"
+                            name="inputGoalTitle" oninput="titleValidation(document.getElementById('inputGoalTitle'))"
+                            required>
+                    </div>
+                    <div class="input-container" style="float: right;">
+                        <label for="inputPrice">Cena</label>
+                        <input class="input-container_valid" placeholder="1000,00" id="inputPrice" name="inputPrice"
+                            oninput="titleValidation(document.getElementById('inputGoalTitle'))" required>
+                    </div>
+                    <div class="input-container" style="float: left;">
+                        <label for="inputCategory">Kategoria</label>
+                        <select class="input-container_valid" id="inputCategory" name="inputCategory">
+                            {% for category in Categories %}
+                            <option value="{{category}}">{{category}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-container" style="float: right;">
+                        <label for="inputDeadline">Do kiedy</label>
+                        <input class="input-container_valid" type="date" id="inputDeadline" name="inputDeadline">
+                    </div>
+                </div>
+                <div class="info-container">
+                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+                </div>
+                <p id="Error-goal" class="errorText">{{error}}</p>
+            </form>
+        </div>
+    </div>
+    <div class="modal-background" id="modal-info" role="dialog">
+        <div id="window" style="width: 550px;">
+            <div class="clearfix">
+                <h2 id="goal_title"></h2>
+                <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-info'))">
+            </div>
+            <p class="to-pay">Suma: <strong id="goal_price"></strong><span> PLN</span></p>
+            <h1 class="to-pay" id="goal_to_pay"></h1>
+            <p class="to-pay">Opis:</p>
+            <p class="description-box">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint nihil aut officiis
+                commodi repellendus corrupti, ipsa consectetur saepe labore molestias dolorem, consequuntur nam aperiam.
+                Vitae sunt voluptatum nisi natus ducimus?</p>
+            <div class="info-container">
+                <button class="confrim" type="submit" id="commit_button"
+                    onclick="closeGoalPopup(document.getElementById('modal-info')); openPopup(document.getElementById('modal-transaction'))">Wpłać</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-background" id="modal-transaction" role="dialog">
+        <div id="window" style="width: 400px;">
+            <form action="{{url_for('goalTransaction', id = Wallet_id)}}" method="POST" id="goalTransactionForm">
+                <div class="info-container" style="margin-top: 0px;">
+                    <h2>Ile chcesz przelać?</h2>
+                    <img src="../static/Go back 2.svg"
+                        onclick="closePopupFinish(document.getElementById('modal-transaction'))">
+                </div>
+                <div class="info-container">
+                    <input class="input-container_valid" style="float: left;" placeholder="Wprowadź ilość pieniędzy"
+                        id="inputAmmount" name="inputAmmount" required>
+                </div>
+                <div class="info-container">
+                    <button class="confrim" type="submit" id="pay-btn">Potwierdź</button>
+                </div>
+                <p id="Error-transaction" class="errorText">{{error}}</p>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    let popup = document.getElementById("modal");
+    let error_label = document.getElementById("Error");
+    var deadline = document.getElementById("inputDeadline");
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    deadline.value = today;
+    console.log(today);
+    if (typeof error_label.textContent === 'string' && error_label.textContent.trim().length === 0) {
+        popup.style.visibility = "hidden";
+    } else {
+        popup.style.visibility = "visible";
+    }
+    function openGoalPopup(modal, title, price, to_pay, description, goal_id) {
+        document.getElementById('goal_title').innerHTML = title;
+        document.getElementById('goal_price').innerHTML = price;
+        document.getElementById('goal_to_pay').innerHTML = "<span>Musisz zapłacić: </span>" + to_pay + "<span> PLN</span>";
+        modal.style.visibility = "visible";
+        console.log(goal_id);
+        var goal_id_info = document.createElement("input");
+        goal_id_info.id = "inputGoalID"
+        goal_id_info.value = goal_id;
+        goal_id_info.name = "inputGoalID";
+        goal_id_info.style.display = "none";
+        document.getElementById("goalTransactionForm").appendChild(goal_id_info);
+    }
+    function closeGoalPopup(modal) {
+        modal.style.visibility = "hidden";
+        console.log("dziala");
+    }
+    function openPopup(modal) {
+        modal.style.visibility = "visible";
+        console.log("dziala");
+    }
+    function closePopup(modal) {
+        modal.style.visibility = "hidden";
+        console.log("dziala");
+    }
+    function closePopupFinish(modal) {
+        modal.style.visibility = "hidden";
+        document.getElementById("inputGoalID").remove();
+        console.log("działa")
+    }
+
+    let lastSpan = document.querySelectorAll('.chill');
+    for (let elem of lastSpan) {
+        let text = elem.innerHTML.split(" ");
+        if (parseInt(text[0]) < 4) {
+            elem.className = "warning";
+        } else if (parseInt(text[0]) > 3 && parseInt(text[0]) < 8) {
+            elem.className = "closer";
+        }
+    }
+
+    const commit_button = document.querySelector('#commit_button');
+
+
+    function switchWindows(element1, element2, style1, style2) {
+        console.log("powinno pojsc");
+        style1.className = "history-clicked";
+        style2.className = "history";
+        element1.style.display = "none";
+        element2.style.display = "block";
+    }
+
+
+    function sumValidation() {
+        var val_notify = 0;
+        const validation_id = ["inputTitle", "inputAmmount", "inputNickname", "inputCategory"];
+        for (let i = 0; i < validation_id.length; i++) {
+            var check = document.getElementById(validation_id[i]);
+            check.oninput();
+            if (check.className == "input-container_valid") {
+                val_notify += 1;
+            }
+        }
+        if (val_notify == validation_id.length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function stringContainsNumber(_string) {
+        let matchPattern = _string.match(/\d+/g);
+        if (matchPattern != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function hasWhiteSpace(_string) {
+        let matchPattern = _string.match(/\s+/g);
+        if (matchPattern != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function stringHasOnlyLetters(_string) {
+        let matchPattern = /^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$/.test(_string);
+        if (matchPattern != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    var titleValidation = function (input_id) {
+        if (input_id.value != "") {
+            input_id.className = "input-container_valid";
+            commit_button.disabled = false;
+        } else {
+            input_id.className = "input-container_invalid";
+            commit_button.disabled = true;
+        }
+    }
+
+    var nicknameValidation = function (input_id) {
+        if (input_id.value != "" && hasWhiteSpace(input_id.value) == false && input_id.value.length > 3) {
+            input_id.className = "input-container_valid";
+            commit_button.disabled = false;
+        } else {
+            input_id.className = "input-container_invalid";
+            commit_button.disabled = true;
+        }
+    }
+
+    var ammountValidation = function (input_id) {
+        if (input_id.value != "" && hasWhiteSpace(input_id.value) == false && stringContainsNumber(input_id.value) == true && input_id.value > 0) {
+            input_id.className = "input-container_valid";
+            commit_button.disabled = false;
+        } else {
+            input_id.className = "input-container_invalid";
+            commit_button.disabled = true;
+        }
+    }
+
+    var categoryValidation = function (input_id) {
+        if (input_id.value != "" && hasWhiteSpace(input_id.value) == false && stringHasOnlyLetters(input_id.value) == true && input_id.value[0].toUpperCase() == input_id.value[0]) {
+            input_id.className = "input-container_valid";
+            commit_button.disabled = false;
+        } else {
+            input_id.className = "input-container_invalid";
+            commit_button.disabled = true;
+        }
+    }
+
+
+
+
+</script>
+
+{% endblock %}

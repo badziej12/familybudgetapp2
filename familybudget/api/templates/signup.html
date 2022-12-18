@@ -1,107 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Family Budget</title>
     <link rel="stylesheet" href="../static/style.css">
     <style>
-       .login-container{
-        overflow: hidden;
-       }
-       .left-side{
-        float: left;
-        width: 50%;
-       }
-       .right-side{
-        float: right;
-        width: 50%;
-        max-height: 100%;
-       }
-      
-       #welcoming{
-        font-style: normal;
-        font-weight: 700;
-        font-size: 36px;
-        line-height: 42px;
-        color: #000000;
-        width: 100%;
-        
-       }
-       #desc{
-        width: 70%;
-        float: left;
-        text-align: left;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 20px;
-        color: #585858;
-       }
-       #arrow{
-        vertical-align: middle;
-        float: right;
-        width: 30%;
-        padding-top: 10px;
-        padding-left: 20px;
-        padding-right: 30px;
+        .login-container {
+            overflow: hidden;
+        }
 
-       }
-       .description{
-        float: left;
-        max-width: 100%;
-        margin-bottom: auto;
-       }
-       .data-form{
-        margin: 10px 0;
-        width: 100%;
-       }
-       .data-form input{
-        max-width: 300px;
-        margin-bottom: 25px;
-       }
-       .login-button{
-        margin-top: 150px;
-        margin-bottom: 11px;
-       }
+        .left-side {
+            float: left;
+            width: 50%;
+        }
 
+        .right-side {
+            float: right;
+            width: 50%;
+            max-height: 100%;
+        }
+
+        #welcoming {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 36px;
+            line-height: 42px;
+            color: #000000;
+            width: 100%;
+
+        }
+
+        #desc {
+            width: 70%;
+            float: left;
+            text-align: left;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: #585858;
+        }
+
+        #arrow {
+            vertical-align: middle;
+            float: right;
+            width: 30%;
+            padding-top: 10px;
+            padding-left: 20px;
+            padding-right: 30px;
+
+        }
+
+        .description {
+            float: left;
+            max-width: 100%;
+            margin-bottom: auto;
+        }
+
+        .data-form {
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .data-form input {
+            max-width: 300px;
+            margin-bottom: 25px;
+        }
+
+        .login-button {
+            margin-top: 150px;
+            margin-bottom: 11px;
+        }
     </style>
 
 </head>
+
 <body>
     <div class="background" style="height: 100vh;">
         <div class="login-container" style="max-width: 774px; padding: 30px;">
             <form class="form-signin" action="/api/signup" method="POST">
                 <div class="left-side">
                     <div class="welcome-container" style="text-align: left; margin-bottom: 11px;">
-                        <label id="welcoming">Create an account</label>
+                        <label id="welcoming">Załóż konto</label>
                     </div>
                     <div class="description">
-                        <label id="desc">Click on "Create account" button below after filling the form</label>
-                        <img src="../static/Arrow.svg" alt="" id="arrow">   
+                        <label id="desc">Kliknij przycisk "Stwórz konto" poniżej po wypełnieniu wszystkich pól</label>
+                        <img src="../static/Arrow.svg" alt="" id="arrow">
                     </div>
                     <div>
-                        <button class="login-button" type="submit">Create account</button>
+                        <button class="login-button" type="submit">Stwórz konto</button>
                     </div>
                     <div style="width: 100%;">
                         <label class="information">
-                            Already have an account?
-                            <a href="/signin">LOG IN</a>
+                            Posiadasz już konto?
+                            <a href="/signin">ZALOGUJ</a>
                         </label>
                     </div>
                 </div>
                 <div class="right-side">
                     <div class="data-form" id="Nickname">
-                        <label for="inputNickname">Nickname</label> 
-                        <input type="text" name="inputNickname" id="inputNickname" placeholder="jan" required autofocus>
+                        <label for="inputNickname">Nickname</label>
+                        <input type="text" name="inputName" id="inputName" placeholder="jan112" required autofocus>
                     </div>
                     <div class="data-form" id="Email">
-                        <label id="inputEmail" for="inputEmail">Email adrres</label> 
-                        <input type="email" name="inputEmail" id="inputEmail" placeholder="jankowalski@gmail.com" required autofocus>
+                        <label id="inputEmail" for="inputEmail">Adres e-mail</label>
+                        <input type="email" name="inputEmail" id="inputEmail" placeholder="jankowalski@gmail.com"
+                            required>
                     </div>
                     <div class="data-form" id="Password">
-                        <label for="inputPassword">Password</label> 
-                        <input type="password" name="inputPassword" id="inputPassword" placeholder="password" required autofocus>
+                        <label for="inputPassword">Hasło</label>
+                        <input type="password" name="inputPassword" id="inputPassword" placeholder="password" required>
                     </div>
                 </div>
             </form>
@@ -109,4 +119,5 @@
     </div>
 
 </body>
+
 </html>

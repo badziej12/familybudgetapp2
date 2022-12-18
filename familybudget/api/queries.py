@@ -1,5 +1,22 @@
-from .models import Families, Users, Transactions, Categories
+from .models import Families, Users, Transactions, Categories, Wallet, Goals, Members
 from ariadne import convert_kwargs_to_snake_case
+
+def listFamilyMembers_resolver(obj, info, id):
+    try:
+        members = [member.to_dict() for member in Members.query.all()]
+        print(members)
+        payload = {
+            "success": True,
+            "errors": [str(error)]
+        }
+        
+    
+    except Exception as error:
+        payload = {
+                "success": False,
+                "errors": [str(error)]
+        }
+    return payload
 
 def listUsers_resolver(obj, info):
     try:
@@ -21,7 +38,6 @@ def listTransactions_resolver(obj, info):
         transactions = [transaction.to_dict() for transaction in Transactions.query.all()]
         
         print(transactions)
-        print(len(transactions))
         payload = {
             "success": True,
             "transactions": transactions
@@ -39,7 +55,7 @@ def listFamilies_resolver(obj, info):
         print(families)
         payload = {
             "success": True,
-            "family": families
+            "families": families
         }
     except Exception as error:
         payload = {
@@ -64,32 +80,85 @@ def listCategories_resolver(obj, info):
     return payload
     
 
+def listWallets_resolver(obj, info):
+    try:
+        wallets = [wallet.to_dict() for wallet in Wallet.query.all()]
+        print(wallets)
+        payload = {
+            "success": True,
+            "wallets": wallets
+        }
+    except Exception as error:
+        payload = {
+                "success": False,
+                "errors": [str(error)]
+        }
+    return payload
+
+def listGoals_resolver(obj, info):
+    try:
+        goals = [goal.to_dict() for goal in Goals.query.all()]
+        print(goals)
+        payload = {
+            "success": True,
+            "goals": goals
+        }
+    except Exception as error:
+        payload = {
+                "success": False,
+                "errors": [str(error)]
+        }
+    return payload
+
+def listMembers_resolver(obj, info):
+    try:
+        members = [member.to_dict() for member in Members.query.all()]
+        print(members)
+        
+        payload = {
+            "success": True,
+            "members": members
+        }
+
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
+        
 
 @convert_kwargs_to_snake_case
 def getUser_resolver(obj, info, id):
     try:
         user = Users.query.get(id)
-        user_transactions = []
-        transactions = listTransactions_resolver(user, None)
-        print(transactions)
-        for transaction in transactions:
-            if transaction.recipient_id == int(id) or transaction.sender_id == int(id):
-                user_transactions.append(transaction)
-        
-        print(user.to_dict())
-        userdict = user.to_dict()
-        print(userdict)
-        userdict.update({"transaction": user_transactions})
-        print(userdict)
+        print(user)
 
         payload = {
             "success": True,
-            "user": userdict
+            "user": user.to_dict()
         }
     except AttributeError: # todo not found
         payload = {
             "success": False,
             "errors": ["Users item matching {id} not found"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def getMember_resolver(obj, info, user_id, family_id):
+    try:
+        member = Members.query.get([user_id, family_id])
+        print(member.to_dict())
+
+        payload = {
+            "success": True,
+            "member": member.to_dict()
+        }
+    except AttributeError: # todo not found
+        payload = {
+            "success": False,
+            "errors": ["Member item matching {id} not found"]
         }
     return payload
 
@@ -119,7 +188,7 @@ def getFamily_resolver(obj, info, id):
     except AttributeError: # todo not found
         payload = {
             "success": False,
-            "errors": ["Transaction item matching {id} not found"]
+            "errors": ["Family item matching {id} not found"]
         }
     return payload
 
@@ -134,7 +203,37 @@ def getCategory_resolver(obj, info, id):
     except AttributeError: # todo not found
         payload = {
             "success": False,
-            "errors": ["Transaction item matching {id} not found"]
+            "errors": ["Category item matching {id} not found"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def getWallet_resolver(obj, info, id):
+    try:
+        wallet = Wallet.query.get(id)
+        payload = {
+            "success": True,
+            "wallet": wallet.to_dict()
+        }
+    except AttributeError: # todo not found
+        payload = {
+            "success": False,
+            "errors": ["Wallet item matching {id} not found"]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def getGoal_resolver(obj, info, id):
+    try:
+        goal = Goals.query.get(id)
+        payload = {
+            "success": True,
+            "goal": goal.to_dict()
+        }
+    except AttributeError: # todo not found
+        payload = {
+            "success": False,
+            "errors": ["Goal item matching {id} not found"]
         }
     return payload
 
