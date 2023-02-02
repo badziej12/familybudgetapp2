@@ -122,86 +122,6 @@
         visibility: hidden;
     }
 
-    #window {
-        background: #F6F2FF;
-        border: 1px solid #000000;
-        border-radius: 10px;
-        width: 700px;
-        padding: 45px 40px;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        position: absolute;
-    }
-
-    #window label {
-        font-style: normal;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 20px;
-        color: #585858;
-        float: left;
-        margin: 10px 0;
-    }
-
-    #window img {
-        float: right;
-        cursor: pointer;
-    }
-
-    #window p {
-        color: red;
-        margin: 10px 0;
-        text-align: center;
-        font-size: 12px;
-    }
-
-    .info-container {
-        height: 40px;
-        margin: 35px 0px;
-    }
-
-    .input-container_valid {
-        background: #FFFFFF;
-        border: 1px solid #E5E5E5;
-        border-radius: 5px;
-        height: 40px;
-        width: 100%;
-        padding: 10px;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 17px;
-        line-height: 20px;
-        color: #8B8B8B;
-    }
-
-    .input-container_invalid {
-        background: #FFFFFF;
-        border: 1px solid #ff0000;
-        border-radius: 5px;
-        height: 40px;
-        width: 280px;
-        padding: 10px;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 17px;
-        line-height: 20px;
-        color: #8B8B8B;
-    }
-
-    .confrim {
-        background: #48D367;
-        border-radius: 20px;
-        height: 40px;
-        width: 100%;
-        font-weight: 700;
-        font-size: 18px;
-        line-height: 21px;
-        color: #FFFFFF;
-        border: none;
-        cursor: pointer;
-    }
-
     .confrim:disabled,
     .confrim[disabled] {
         background: #9dfab1;
@@ -245,24 +165,23 @@
         </div>
     </a>
     {% endfor %}
-    <button type="button" class="new" onclick="openPopup()">Dodaj</button>
+    <button type="button" class="new-btn" onclick="openPopup()">Dodaj</button>
 
     <div class="modal-background" id="modal" role="dialog">
         <div id="window">
             <form action="/api/createFamily" method="POST">
-                <div class="info-container" style="margin-top: 0px;">
-                    <label>Wpisz nazwę rodziny</label>
+                <div class="info-container clearfix" style="margin-top: 0px;">
+                    <h2 style="margin-right: 20px">Wpisz nazwę rodziny</h2>
                     <img src="../static/Go back 2.svg" onclick="closePopup()">
                 </div>
-                <div class="info-container">
-                    <input class="input-container_valid" style="float: left;" placeholder="Enter family name"
-                        id="inputFamily" name="inputFamily"
-                        oninput="titleValidation(document.getElementById('inputFamily'))" required>
+                <div class="info-container space-con">
+                    <input class="input-container_valid" placeholder="np. Kowalscy, Znajomi" id="inputFamily"
+                        name="inputFamily" oninput="titleValidation(document.getElementById('inputFamily'))" required>
                 </div>
                 <div class="info-container">
-                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+                    <button class="new-btn popup-btn" type="submit" id="commit_button">Potwierdź</button>
                 </div>
-                <p id="Error">{{error}}</p>
+                <p id="Error" class="errorText">{{error}}</p>
             </form>
         </div>
     </div>

@@ -13,13 +13,13 @@ type Mutation{
     createFamily(name: String!, member_id: ID!): FamilyResult!
     deleteFamily(id: ID!): FamilyResult!
     createCategory(name: String!): CategoryResult!
-    createGoal(deadline: String! name: String!, price: Float!, description: String, wallet_id: ID, category_id: Int!, family_id: ID): GoalResult!
-    createWallet(balance: Float!, month: Int!, user_id: ID!): WalletResult!
+    createGoal(deadline: String! name: String!, price: Float!, description: String, paid: Boolean!,wallet_id: ID, category_id: Int!, family_id: ID): GoalResult!
+    createWallet(balance: Float!, month: Int!, user_id: ID!, year: Int!): WalletResult!
     deleteCategory(id: ID!): CategoryResult!
     deleteWallet(id: ID!): WalletResult!
     deleteGoal(id: ID!): GoalResult!
-    updateWallet(id: ID!, balance: Float, month: String): WalletResult!
-    updateGoal(id: ID!, deadline: String, name: String, price: Float, description: String): GoalResult!
+    updateWallet(id: ID!, balance: Float, month: Int, year: Int): WalletResult!
+    updateGoal(id: ID!, deadline: String, name: String, price: Float, description: String, paid: Boolean): GoalResult!
     addFamilyMember(member_id: ID!, family_id: ID!): MemberResult!
     deleteFamilyMember(user_id: ID!, family_id: ID!): MemberResult!
     deleteTransaction(id: ID!): TransactionResult!
@@ -72,6 +72,7 @@ type Wallet{
     id: ID!
     balance: Float!
     month: Int!
+    year: Int!
     user_id: ID!
     user: User!
     goals: [Goal]
@@ -85,6 +86,7 @@ type Goal{
     name: String!
     price: Float!
     description: String
+    paid: Boolean!
     category_id: String!
     category: Category!
     wallet_id: ID

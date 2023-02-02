@@ -67,52 +67,27 @@
 <div id="left-side">
     <div id="profile-info">
         <img src="../static/profile photo.svg">
-        <label id="name" style="margin: 5px;">{{First_name}} {{Last_name}}</label>
-        <label id="nickname" style="font-size:16px;">@{{Nickname}}</label>
+        <h2 id="nickname" style="font-size:20px; margin-top: 10px;">@{{Nickname}}</h2>
     </div>
 </div>
 <div id="right-side">
     <div id="label-container">
-        <label>Settings</label>
+        <label>Edytuj dane profilu</label>
     </div>
     <form action="/api/profileChange" method="POST">
-        <div>
-            <input type="text" class="input-container" style="float: left;" placeholder="{{First_name}}"
-                id="inputFirstName" name="inputFirstName">
-            <input type="text" class="input-container" style="float: right;" placeholder="{{Last_name}}"
-                id="inputLastName" name="inputLastName">
-        </div>
         <div>
             <input type="text" class="input-container" style="float: left;" placeholder="{{Nickname}}"
                 id="inputUsername" name="inputUsername">
             <input type="text" class="input-container" style="float: right;" placeholder="{{Email}}" id="inputEmail"
                 name="inputEmail" disabled>
         </div>
-        <div>
-            <input type="text" class="input-container" style="float: left; width: 30%;" placeholder="{{Age}}"
-                id="inputAge" name="inputAge">
-        </div>
         <div style="width: 100%;">
-            <button class="login-button" type="submit" style="width: 100%;">Submit changes</button>
+            <button class="new-btn" type="submit" style="width: 100%;">Potwierdź zmiany</button>
         </div>
     </form>
+    <p class="errorText" style="text-align: center;">{{error}}</p>
 
 </div>
 
-
-<script>
-    var check = document.getElementById("inputFirstName");
-    if (check.placeholder == "None") {
-        check.placeholder = "Enter your first name";
-    };
-    check = document.getElementById("inputLastName");
-    if (check.placeholder == "None") {
-        check.placeholder = "Enter your last name";
-    };
-    check = document.getElementById("inputAge");
-    if (check.placeholder == "None") {
-        check.placeholder = "Enter your age";
-    };
-</script>
 
 {% endblock %}

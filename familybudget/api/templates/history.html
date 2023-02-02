@@ -34,7 +34,7 @@
     }
 
     .balance-container {
-        margin: 50px auto;
+        margin: 20px auto;
         background: #FFFFFF;
         border: 2px solid #E5E5E5;
         border-radius: 4px;
@@ -72,36 +72,37 @@
     }
 
     #ammount {
-        color: #48D367;
+        color: #2ebb4d;
     }
 
     .history {
         width: 35%;
-        float: right;
-        border-radius: 10px;
+        float: left;
+        height: 50px;
         text-align: center;
         font-weight: 700;
         font-size: 23px;
         line-height: 50px;
-        color: #DEEAF0;
-        background: #3C859E;
-        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+        color: #000000;
+        background: #E5E5E5;
+        border-radius: 4px;
         cursor: pointer;
         transition: 0.2s;
     }
 
     .history-clicked {
         width: 35%;
-        float: right;
-        border-radius: 10px;
+        float: left;
+        height: 50px;
+        color: #3D159C;
         text-align: center;
         font-weight: 700;
         font-size: 23px;
         line-height: 50px;
-        color: #DEEAF0;
-        background: #3C859E;
+        background: #FAEAFF;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 4px;
         cursor: pointer;
-        box-shadow: inset 0px 1px 10px rgba(0, 0, 0, 0.29);
         transition: 0.2s;
     }
 
@@ -141,6 +142,10 @@
         cursor: not-allowed;
     }
 
+    #hero-table {
+        display: none;
+    }
+
     .hero-table {
         overflow-y: scroll;
         margin: 20px 0;
@@ -148,13 +153,13 @@
     }
 
     #incoming {
-        display: none;
+        display: block;
     }
 
     .incoming {
         display: block;
-        margin: 20px 0;
-        height: 550px;
+        margin: 12px 0 30px 0;
+        height: 580px;
     }
 
     .transaction input {
@@ -166,14 +171,11 @@
     }
 
     .history-head {
-        float: left;
         line-height: 50px;
         margin-bottom: 10px;
     }
 
     .toolbar {
-        background: #FFFFFF;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         padding: 15px;
     }
 
@@ -186,6 +188,27 @@
         margin: 0;
         font-size: 18px;
     }
+
+    #sort-info {
+        text-transform: uppercase;
+        color: #000000;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    #sort-info2 {
+        text-transform: uppercase;
+        color: #000000;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+
+
+    .pending {
+        text-align: center;
+        margin-top: 5px;
+    }
 </style>
 <div id="leftside">
     <div id="profile-image">
@@ -195,7 +218,7 @@
     <div class="balance-container">
         <h2>{{Month}}</h2>
         <div style="margin-top: 18px;">
-            <label id="avaiable">Dostępne środki</label>
+            <label id="avaiable">Zaplanowane środki</label>
         </div>
         <div style="margin-top: 10px;">
             <label id="value" for="">{{Balance}}</label>
@@ -206,50 +229,77 @@
             <img src="../static/Line 2.svg" style="width: 100%;">
         </div>
         <div class="pending">
-            <button class="new" style="width: 38px;"
-                onclick="openPopup(document.getElementById('modal-fill'))">+</button>
+            <button class="new-btn" type="button" onclick="openPopup(document.getElementById('modal-fill'))">Dodaj
+                środki</button>
         </div>
     </div>
-    <div class="calendar">
-        <a href="/wallet/1">sty</a>
-        <a href="/wallet/2">lut</a>
-        <a href="/wallet/3">mar</a>
-        <a href="/wallet/4">kwi</a>
-        <a href="/wallet/5">maj</a>
-        <a href="/wallet/6">cze</a>
-        <a href="/wallet/7">lip</a>
-        <a href="/wallet/8">sie</a>
-        <a href="/wallet/9">wrz</a>
-        <a href="/wallet/10">paź</a>
-        <a href="/wallet/11">lis</a>
-        <a href="/wallet/12">gru</a>
+    <div class="year-bar">
+        <a id="subtractYear"><img src="../static/year-left.png" alt=""></a>
+        <p>{{Year}}</p>
+        <a id="addYear"><img src="../static/year-right.png" alt=""></a>
+    </div>
+    <div class=" calendar">
+        <a href="/wallet/1+{{Year}}">sty</a>
+        <a href="/wallet/2+{{Year}}">lut</a>
+        <a href="/wallet/3+{{Year}}">mar</a>
+        <a href="/wallet/4+{{Year}}">kwi</a>
+        <a href="/wallet/5+{{Year}}">maj</a>
+        <a href="/wallet/6+{{Year}}">cze</a>
+        <a href="/wallet/7+{{Year}}">lip</a>
+        <a href="/wallet/8+{{Year}}">sie</a>
+        <a href="/wallet/9+{{Year}}">wrz</a>
+        <a href="/wallet/10+{{Year}}">paź</a>
+        <a href="/wallet/11+{{Year}}">lis</a>
+        <a href="/wallet/12+{{Year}}">gru</a>
     </div>
 
 </div>
 <div id="rightside">
 
     <div class="toolbar">
-        <div class="clearfix" style="border-bottom: 1px solid #e5e5e5;">
-            <h2 class="history-head">Transakcje</h2>
-            <p class="history" id="p-btn-2"
-                onclick="switchWindows(document.getElementById('hero-table'), document.getElementById('incoming'), document.getElementById('p-btn-2'), document.getElementById('p-btn-1'))">
+        <h2 class="history-head">Transakcje</h2>
+        <div class="clearfix">
+            <p class="history-clicked" id="p-btn-2"
+                onclick="switchWindows(document.getElementById('hero-table'), document.getElementById('incoming'), document.getElementById('p-btn-2'), document.getElementById('p-btn-1'), document.getElementById('dropdown-history'), document.getElementById('dropdown-goals'))">
                 Nadchodzące</p>
-            <p class="history-clicked" id="p-btn-1" style="margin-right: 30px;"
-                onclick="switchWindows(document.getElementById('incoming'), document.getElementById('hero-table'), document.getElementById('p-btn-1'), document.getElementById('p-btn-2'))">
+            <p class="history" id="p-btn-1" style="margin-right: 30px;"
+                onclick="switchWindows(document.getElementById('incoming'), document.getElementById('hero-table'), document.getElementById('p-btn-1'), document.getElementById('p-btn-2'), document.getElementById('dropdown-goals'), document.getElementById('dropdown-history'))">
                 Historia
             </p>
-        </div>
-        <div class="clearfix">
-            <h3 class="sort head3">Sortuj według</h3>
-            <select class="select-container" onchange="sortDiv.call(this, event)" oncanplay="sortDivAscending()">
-                <option value="Data malejąco">Data malejąco</option>
-                <option value="Data rosnąco">Data rosnąco</option>
-            </select>
+            <div class="dropdown" id="dropdown-goals">
+                <button class="burger" type="button" value="menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="dropdown-content">
+                    <a href='#' onclick="sortDivDescending()">Data
+                        rosnąco</a>
+                    <a href="#" onclick="sortDivAscending()">Data malejąco</a>
+                    <a href="#" onclick="sortDivNameAscending()">Nazwa rosnąco</a>
+                    <a href="#" onclick="sortDivNameDescending()">Nazwa malejąco</a>
+                </div>
+            </div>
+            <div class="dropdown" id="dropdown-history">
+                <button class="burger" type="button" value="menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="dropdown-content">
+                    <a href='#' onclick="sortDateDescending()">Data
+                        rosnąco</a>
+                    <a href="#" onclick="sortDateAscending()">Data malejąco</a>
+                    <a href="#" onclick="sortHistoryNameDescending()">Nazwa rosnąco</a>
+                    <a href="#" onclick="sortHistoryNameAscending()">Nazwa malejąco</a>
+                </div>
+            </div>
         </div>
     </div>
     <div id="hero-table">
         <div class=" hero-table">
-            <table class="transasction-table" cellspacing="0">
+            <h3 id="sort-info2">Sortowanie: Data malejąco</h3>
+            <table class="transasction-table" cellspacing="0" id="transaction-table">
                 <thead>
                     <tr>
                         <th scope="col">Data</th>
@@ -257,7 +307,7 @@
                         <th scope="col" style="text-align: right;">Kwota</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="transaction-body">
                     {% for result in Result %}
                     <tr>
                         <td scope="row" id="date">{{result['date']}}</th>
@@ -271,15 +321,17 @@
 
         </div>
         <div class=" button">
-            <button type="button" class="new" onclick="openPopup(document.getElementById('modal'))">Nowa</button>
+            <button type="button" class="new-btn" onclick="openPopup(document.getElementById('modal'))">Odnotuj nową
+                transakcję</button>
         </div>
     </div>
-    <div id="incoming" style="margin-top: 35px;">
+    <div id="incoming">
         <div class="incoming">
+            <h3 id="sort-info">Sortowanie: malejąco</h3>
             <section id="goal-section">
                 {% for goal in Goals %}
                 <div class="goal-window"
-                    onclick="openGoalPopup(document.getElementById('modal-info'), '{{goal['title']}}', '{{goal['price']}}', '{{goal['to_pay']}}', 0, '{{goal['id']}}')">
+                    onclick="openGoalPopup(document.getElementById('modal-info'), '{{goal['title']}}', '{{goal['price']}}', '{{goal['to_pay']}}', '{{goal['description']}}', '{{goal['id']}}')">
                     <div class="goal-pay">
                         <h2>{{goal['title']}}</h2>
                         <h1>{{goal['to_pay']}} <span>PLN</span></h1>
@@ -292,7 +344,8 @@
             </section>
         </div>
         <div class="button">
-            <button type="button" class="new" onclick="openPopup(document.getElementById('modal-goal'))">Dodaj</button>
+            <button type="button" class="new-btn" onclick="openPopup(document.getElementById('modal-goal'))">Stwórz nowy
+                cel</button>
         </div>
     </div>
 
@@ -300,26 +353,34 @@
     <div class="modal-background" id="modal" role="dialog">
         <div id="window">
             <form action="{{url_for('newTransaction', wallet_id = Wallet_id)}}" method="POST" class="transaction">
-                <div class="info-container" style="margin-top: 0px;">
-                    <h2>Wprowadź dane transakcji</h2>
+                <div class="info-container clearfix" style="margin-top: 0px;">
+                    <h2>Wprowadź dane</h2>
                     <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal'))">
                 </div>
-                <input class="input-container_valid" placeholder="Tytuł transakcji" id="inputTitle" name="inputTitle"
-                    oninput="titleValidation(document.getElementById('inputTitle'))" required>
-                <input type="number" class="input-container_valid" placeholder="Kwota" id="inputAmmount"
-                    name="inputAmmount" oninput="ammountValidation(document.getElementById('inputAmmount'))" required>
-                <select class="input-container_valid" id="inputCategory" name="inputCategory">
-                    {% for category in Categories %}
-                    <option value="{{category}}">{{category}}</option>
-                    {% endfor %}
-                </select>
-
-
-                <button class="confrim" type="submit" id="commit_button">Potwierź</button>
-
+                <div class="info-container space-con">
+                    <label for="inputTitle">Tytuł transakcji</label>
+                    <input class="input-container_valid" placeholder="Opłata za ..." id="inputTitle" name="inputTitle"
+                        oninput="titleValidation(document.getElementById('inputTitle'))" required>
+                </div>
+                <div class="info-container space-con">
+                    <label for="inputAmmount">Kwota</label>
+                    <input class="input-container_valid" placeholder="12,50" id="inputAmmount" name="inputAmmount"
+                        oninput="ammountValidation(document.getElementById('inputAmmount'))" required>
+                </div>
+                <div class="info-container space-con">
+                    <label for="inputCategory">Wybierz kategorię</label>
+                    <select class="input-container_valid" id="inputCategory" name="inputCategory">
+                        {% for category in Categories %}
+                        <option value="{{category}}">{{category}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="info-container" style="margin-top: 10px;">
+                    <button class="new-btn popup-btn" type="submit" id="commit_button">Potwierdź</button>
+                </div>
                 <div class="info-container"
-                    style="text-align: center; margin-top: 0px; display: flex; justify-content: center;">
-                    <label style="color: red; font-size:16px; text-align: center;" id="Error">{{error}}</label>
+                    style="text-align: center; margin: 10px 0px; display: flex; justify-content: center;">
+                    <label style="color: red; font-size:16px; text-align: center;" id="Error1">{{error1}}</label>
                 </div>
             </form>
         </div>
@@ -327,17 +388,21 @@
     <div class="modal-background" id="modal-fill" role="dialog">
         <div id="window" style="height: auto; width: 400px;">
             <form action="{{url_for('addBalance', wallet_id = Wallet_id)}}" method="POST">
-                <div class="info-container" style="margin-top: 0px;">
+                <div class="info-container clearfix" style="margin-top: 0px;">
                     <h2>Wprowadź środki</h2>
                     <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-fill'))">
                 </div>
-                <input class="input-container_valid" type="text" name="inputBalance" id="inputBalance">
+                <div class="info-container space-con">
+                    <label for="inputBalance">Podaj wartość PLN</label>
+                    <input class="input-container_valid" type="text" name="inputBalance" id="inputBalance"
+                        placeholder="100,00" required>
+                </div>
                 <div class="info-container">
-                    <button class="confrim" type="submit" id="commit_button">Confrim</button>
+                    <button class="new-btn popup-btn" type="submit" id="commit_button">Potwierdź</button>
                 </div>
                 <div class="info-container"
-                    style="text-align: center; margin: 0; display: flex; justify-content: center;">
-                    <label style="color: red; font-size:16px; text-align: center;" id="Error">{{error}}</label>
+                    style="text-align: center; margin: 10px 0; display: flex; justify-content: center;">
+                    <label style="color: red; font-size:16px; text-align: center;" id="Error2">{{error2}}</label>
                 </div>
             </form>
         </div>
@@ -347,21 +412,21 @@
             <form action="{{url_for('addGoal', id = Wallet_id)}}" method="POST">
                 <div class="clearfix">
                     <div class="info-container clearfix" style="margin-top: 0px;">
-                        <h2>Jaki jest twój cel</h2>
+                        <h2>Wprowadź dane celu</h2>
                         <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-goal'))">
                     </div>
-                    <div class="input-container" style="float: left;">
+                    <div class="info-container space-con">
                         <label for="inputGoalTitle">Nazwa celu</label>
                         <input class="input-container_valid" placeholder="Wakacje" id="inputGoalTitle"
                             name="inputGoalTitle" oninput="titleValidation(document.getElementById('inputGoalTitle'))"
                             required>
                     </div>
-                    <div class="input-container" style="float: right;">
+                    <div class="info-container space-con">
                         <label for="inputPrice">Cena</label>
                         <input class="input-container_valid" placeholder="1000,00" id="inputPrice" name="inputPrice"
                             oninput="titleValidation(document.getElementById('inputGoalTitle'))" required>
                     </div>
-                    <div class="input-container" style="float: left;">
+                    <div class="info-container space-con">
                         <label for="inputCategory">Kategoria</label>
                         <select class="input-container_valid" id="inputCategory" name="inputCategory">
                             {% for category in Categories %}
@@ -369,15 +434,15 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="input-container" style="float: right;">
+                    <div class="info-container space-con">
                         <label for="inputDeadline">Do kiedy</label>
                         <input class="input-container_valid" type="date" id="inputDeadline" name="inputDeadline">
                     </div>
                 </div>
-                <div class="info-container">
-                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+                <div class="info-container" style="margin-top: 10px;">
+                    <button class="new-btn popup-btn" type="submit" id="commit_button">Potwierdź</button>
                 </div>
-                <p id="Error-goal" class="errorText">{{error}}</p>
+                <p id="Error-goal" class="errorText">{{error3}}</p>
             </form>
         </div>
     </div>
@@ -390,11 +455,21 @@
             <p class="to-pay">Suma: <strong id="goal_price"></strong><span> PLN</span></p>
             <h1 class="to-pay" id="goal_to_pay"></h1>
             <p class="to-pay">Opis:</p>
-            <p class="description-box">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint nihil aut officiis
-                commodi repellendus corrupti, ipsa consectetur saepe labore molestias dolorem, consequuntur nam aperiam.
-                Vitae sunt voluptatum nisi natus ducimus?</p>
-            <div class="info-container">
-                <button class="confrim" type="submit" id="commit_button"
+            <form class="space-con desc-form" action="{{url_for('updateDescription', id = Wallet_id)}}" method="POST"
+                id="descriptionForm">
+                <textarea class="description-box" name="descriptionInput" id="descriptionInput" cols="30" rows="10"
+                    disabled maxlength="100"></textarea>
+                <img id="editButton" class="edit-btn" onclick="editTextarea()" src="../static/Edit button.svg" alt="">
+                <div id="confrimButton" class="confrim-container">
+                    <img src="../static/Confrim button.svg" alt="">
+                    <button type="submit" class="confrim-btn"></button>
+                </div>
+
+                <img id="declineButton" class="decline-btn" onclick="declineTextarea()"
+                    src="../static/Decline button.svg" alt="">
+            </form>
+            <div class=" info-container" style="margin: 10px 0;">
+                <button class="new-btn popup-btn" type="submit" id="commit_button"
                     onclick="closeGoalPopup(document.getElementById('modal-info')); openPopup(document.getElementById('modal-transaction'))">Wpłać</button>
             </div>
         </div>
@@ -402,26 +477,32 @@
     <div class="modal-background" id="modal-transaction" role="dialog">
         <div id="window" style="width: 400px;">
             <form action="{{url_for('goalTransaction', id = Wallet_id)}}" method="POST" id="goalTransactionForm">
-                <div class="info-container" style="margin-top: 0px;">
+                <div class="info-container clearfix" style="margin-top: 0px;">
                     <h2>Ile chcesz przelać?</h2>
                     <img src="../static/Go back 2.svg"
                         onclick="closePopupFinish(document.getElementById('modal-transaction'))">
                 </div>
-                <div class="info-container">
-                    <input class="input-container_valid" style="float: left;" placeholder="Wprowadź ilość pieniędzy"
-                        id="inputAmmount" name="inputAmmount" required>
+                <div class="info-container space-con">
+                    <label for="inputAmmount">Wprowadź kwotę</label>
+                    <input class="input-container_valid" placeholder="40,00" id="inputAmmount" name="inputAmmount"
+                        required>
                 </div>
                 <div class="info-container">
-                    <button class="confrim" type="submit" id="pay-btn">Potwierdź</button>
+                    <button class="new-btn popup-btn" type="submit" id="pay-btn">Potwierdź</button>
                 </div>
-                <p id="Error-transaction" class="errorText">{{error}}</p>
+                <p id="Error-transaction" class="errorText">{{error4}}</p>
             </form>
         </div>
     </div>
 </div>
 <script>
-    let popup = document.getElementById("modal");
-    let error_label = document.getElementById("Error");
+
+    let error_label1 = document.getElementById("Error1");
+    let error_label2 = document.getElementById("Error2");
+    let error_label3 = document.getElementById("Error-goal");
+    let dropdown1 = document.getElementById("dropdown-history");
+    dropdown1.style.display = 'none';
+    let error_label4 = document.getElementById("Error-transaction");
     var deadline = document.getElementById("inputDeadline");
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -431,11 +512,50 @@
     today = yyyy + '-' + mm + '-' + dd;
     deadline.value = today;
     console.log(today);
-    if (typeof error_label.textContent === 'string' && error_label.textContent.trim().length === 0) {
+
+    console.log(parseInt({{ Year }}));
+    const yearPlus = parseInt({{ Year }}) + 1;
+    const yearMinus = parseInt({{ Year }}) - 1;
+
+    document.getElementById('subtractYear').href = '/wallet/{{MonthNumber}}+' + yearMinus;
+    document.getElementById('addYear').href = '/wallet/{{MonthNumber}}+' + yearPlus;
+
+    if (typeof error_label1.textContent === 'string' && error_label1.textContent.trim().length === 0) {
+        let popup = document.getElementById("modal");
         popup.style.visibility = "hidden";
     } else {
+        let popup = document.getElementById("modal");
         popup.style.visibility = "visible";
     }
+
+    if (typeof error_label2.textContent === 'string' && error_label2.textContent.trim().length === 0) {
+        let popup = document.getElementById("modal-fill");
+        popup.style.visibility = "hidden";
+    } else {
+        let popup = document.getElementById("modal-fill");
+        popup.style.visibility = "visible";
+    }
+
+    if (typeof error_label3.textContent === 'string' && error_label3.textContent.trim().length === 0) {
+        let popup = document.getElementById("modal-goal");
+        popup.style.visibility = "hidden";
+    } else {
+        let popup = document.getElementById("modal-goal");
+        popup.style.visibility = "visible";
+    }
+
+    if (typeof error_label4.textContent === 'string' && error_label4.textContent.trim().length === 0) {
+        let popup = document.getElementById("modal-transaction");
+        popup.style.visibility = "hidden";
+    } else {
+        let popup = document.getElementById("modal-transaction");
+        popup.style.visibility = "visible";
+    }
+
+    function addYear() {
+        let
+    }
+
     function openGoalPopup(modal, title, price, to_pay, description, goal_id) {
         document.getElementById('goal_title').innerHTML = title;
         document.getElementById('goal_price').innerHTML = price;
@@ -443,15 +563,25 @@
         modal.style.visibility = "visible";
         console.log(goal_id);
         var goal_id_info = document.createElement("input");
-        goal_id_info.id = "inputGoalID"
+        goal_id_info.id = "inputGoalID";
         goal_id_info.value = goal_id;
         goal_id_info.name = "inputGoalID";
         goal_id_info.style.display = "none";
+        document.getElementById("descriptionInput").value = description;
+        if (description == "None") {
+            document.getElementById("descriptionInput").value = "";
+            document.getElementById("descriptionInput").placeholder = "Dodaj opis ...";
+        }
         document.getElementById("goalTransactionForm").appendChild(goal_id_info);
+        document.getElementById("descriptionForm").appendChild(goal_id_info);
     }
     function closeGoalPopup(modal) {
         modal.style.visibility = "hidden";
         console.log("dziala");
+        document.getElementById("confrimButton").style.display = "none";
+        document.getElementById("declineButton").style.display = "none";
+        document.getElementById("editButton").style.display = "block";
+        document.getElementById("descriptionInput").disabled = true;
     }
     function openPopup(modal) {
         modal.style.visibility = "visible";
@@ -459,12 +589,21 @@
     }
     function closePopup(modal) {
         modal.style.visibility = "hidden";
+        document.getElementById("inputGoalID").remove();
+        document.getElementById("confrimButton").style.display = "none";
+        document.getElementById("declineButton").style.display = "none";
+        document.getElementById("editButton").style.display = "block";
+        document.getElementById("descriptionInput").disabled = true;
         console.log("dziala");
     }
     function closePopupFinish(modal) {
         modal.style.visibility = "hidden";
         document.getElementById("inputGoalID").remove();
-        console.log("działa")
+        document.getElementById("confrimButton").style.display = "none";
+        document.getElementById("declineButton").style.display = "none";
+        document.getElementById("editButton").style.display = "block";
+        document.getElementById("descriptionInput").disabled = true;
+        console.log("działa");
     }
 
     let lastSpan = document.querySelectorAll('.chill');
@@ -480,12 +619,14 @@
     const commit_button = document.querySelector('#commit_button');
 
 
-    function switchWindows(element1, element2, style1, style2) {
+    function switchWindows(element1, element2, style1, style2, dropdown1, dropdown2) {
         console.log("powinno pojsc");
         style1.className = "history-clicked";
         style2.className = "history";
         element1.style.display = "none";
         element2.style.display = "block";
+        dropdown1.style.display = "none";
+        dropdown2.style.display = "block";
     }
 
 
@@ -571,6 +712,22 @@
             input_id.className = "input-container_invalid";
             commit_button.disabled = true;
         }
+    }
+
+    function editTextarea() {
+        document.getElementById("editButton").style.display = "None";
+        document.getElementById("descriptionInput").disabled = false;
+        document.getElementById("descriptionInput").focus();
+        document.getElementById("confrimButton").style.display = "block";
+        document.getElementById("declineButton").style.display = "block";
+    }
+
+    function declineTextarea() {
+        document.getElementById("confrimButton").style.display = "none";
+        document.getElementById("declineButton").style.display = "none";
+        document.getElementById("editButton").style.display = "block";
+        document.getElementById("descriptionInput").disabled = true;
+        document.getElementById("descriptionInput").value = "";
     }
 
 

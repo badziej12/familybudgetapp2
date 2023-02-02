@@ -6,12 +6,18 @@
     #profile {
         background: rgba(217, 217, 217, 0.29);
     }
+
+    #sort-info {
+        text-transform: uppercase;
+        color: #000000;
+        font-size: 18px;
+        margin-bottom: 10px;
+        margin-top: 20px;
+    }
 </style>
 <section>
     <a href="/profile">
         <img src="../static/Go back.svg" alt="Back">
-    </a><a href="#">
-        <img src="../static/Settings.svg" alt="Settings">
     </a>
 </section>
 <aside>
@@ -20,27 +26,47 @@
         {% for member in Members %}
         <p>@{{member}}</p>
         {% endfor %}
-        <button type="button" class="new" style="width: 37px; font-size: 18px; margin-top: 20px;"
-            onclick="openPopup(document.getElementById('modal'))">+</button>
+        <button type="button" class="new-btn" style="margin-top: 30px;"
+            onclick="openPopup(document.getElementById('modal'))">Dodaj
+            członka</button>
     </div>
 </aside>
 <main>
-    <h3>Cele</h3>
-    <section>
+    <div class="clearfix">
+        <h2 style="float: left; line-height: 55px; margin: 0;">Cele</h2>
+        <div class="dropdown">
+            <button class="burger" type="button" value="menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="dropdown-content">
+                <a href='#' onclick="sortDivDescending()">Data
+                    rosnąco</a>
+                <a href="#" onclick="sortDivAscending()">Data malejąco</a>
+                <a href="#" onclick="sortFamilyDivNameAscending()">Nazwa rosnąco</a>
+                <a href="#" onclick="sortFamilyDivNameDescending()">Nazwa malejąco</a>
+            </div>
+        </div>
+    </div>
+    <h3 id="sort-info">Sortowanie: Data malejąco</h3>
+    <section id="goal-section">
+
         {% for i in range(0, Goals['title'].__len__()) %}
         <div class="goal-window"
-            onclick="openGoalPopup(document.getElementById('modal-info'), '{{Goals['title'][i]}}', '{{Goals['price'][i]}}', '{{Goals['to_pay'][i]}}', 0, '{{Goals['id'][i]}}')">
+            onclick="openGoalPopup(document.getElementById('modal-info'), '{{Goals['title'][i]}}', '{{Goals['price'][i]}}', '{{Goals['to_pay'][i]}}', '{{Goals['description'][i]}}', '{{Goals['id'][i]}}')">
             <h2>{{Goals['title'][i]}}</h2>
             <h1>{{Goals['to_pay'][i]}} <span>PLN</span></h1>
-            <p>of <strong>{{Goals['price'][i]}}</strong> <span>PLN</span></p>
+            <p>z <strong>{{Goals['price'][i]}}</strong> <span>PLN</span></p>
             <p><span class="chill">{{Goals['lasts'][i]}} dni do końca</span></p>
         </div>
         {% endfor %}
     </section>
     <div class="button">
-        <button type="button" class="new" onclick="openPopup(document.getElementById('modal-goal'))">Dodaj</button>
-        <button type="button" class="new" onclick="openPopup(document.getElementById('modal-exit'))"
-            style="float: left; background-color: red;">Opuść</button>
+        <button type="button" class="new-btn" onclick="openPopup(document.getElementById('modal-goal'))">Dodaj wspólny
+            cel</button>
+        <button type="button" class="new-btn" onclick="openPopup(document.getElementById('modal-exit'))"
+            style="float: left; background-color: red;">Opuść rodzinę</button>
     </div>
     <div class="modal-background" id="modal" role="dialog">
         <div id="window" style="width: 450px;">
@@ -49,38 +75,40 @@
                     <h2>Kogo chcesz zaprosić?</h2>
                     <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal'))">
                 </div>
-                <div class="info-container">
-                    <input class="input-container_valid" style="float: left;" placeholder="Wprowadź nazwę użytkownika"
-                        id="inputMember" name="inputMember"
-                        oninput="titleValidation(document.getElementById('inputMember'))" required>
+                <div class="info-container space-con">
+                    <input class="input-container_valid" placeholder="Wprowadź nazwę użytkownika" id="inputMember"
+                        name="inputMember" oninput="titleValidation(document.getElementById('inputMember'))" required>
                 </div>
                 <div class="info-container">
-                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+                    <button class="new-btn popup-btn" type="submit" id="commit_button">Potwierdź</button>
                 </div>
-                <p id="Error-member" class="errorText">{{error}}</p>
+                <p id="Error-member" class="errorText">{{error1}}</p>
             </form>
         </div>
     </div>
     <div class="modal-background" id="modal-goal" role="dialog">
         <div id="window">
             <form action="{{url_for('addFamilyGoal', id = Family_id)}}" method="POST">
-                <div class="clearfix">
-                    <div class="info-container clearfix" style="margin-top: 0px;">
-                        <h2>Jaki jest twój cel</h2>
-                        <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-goal'))">
-                    </div>
-                    <div class="input-container" style="float: left;">
+
+                <div class="info-container clearfix" style="margin-top: 0px;">
+                    <h2>Jaki jest twój cel</h2>
+                    <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-goal'))">
+                </div>
+                <div class="row clearfix">
+                    <div class="info-container" style="float: left;">
                         <label for="inputGoalTitle">Nazwa celu</label>
                         <input class="input-container_valid" placeholder="Wakacje" id="inputGoalTitle"
                             name="inputGoalTitle" oninput="titleValidation(document.getElementById('inputGoalTitle'))"
                             required>
                     </div>
-                    <div class="input-container" style="float: right;">
+                    <div class="info-container" style="float: right;">
                         <label for="inputPrice">Cena</label>
                         <input class="input-container_valid" placeholder="1000,00" id="inputPrice" name="inputPrice"
                             oninput="titleValidation(document.getElementById('inputGoalTitle'))" required>
                     </div>
-                    <div class="input-container" style="float: left;">
+                </div>
+                <div class="row clearfix">
+                    <div class="info-container" style="float: left;">
                         <label for="inputCategory">Kategoria</label>
                         <select class="input-container_valid" id="inputCategory" name="inputCategory">
                             {% for category in Categories %}
@@ -88,15 +116,16 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="input-container" style="float: right;">
+                    <div class="info-container" style="float: right;">
                         <label for="inputDeadline">Do kiedy</label>
                         <input class="input-container_valid" type="date" id="inputDeadline" name="inputDeadline">
                     </div>
                 </div>
-                <div class="info-container">
-                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+
+                <div class="info-container" style="margin-top: 20px;">
+                    <button class="new-btn popup-btn" type="submit" id="commit_button">Potwierdź</button>
                 </div>
-                <p id="Error-goal" class="errorText">{{error}}</p>
+                <p id="Error-goal" class="errorText">{{error2}}</p>
             </form>
         </div>
     </div>
@@ -107,12 +136,13 @@
                     <h2>Na pewno chcesz opuścić rodzinę?</h2>
                     <img src="../static/Go back 2.svg" onclick="closePopup(document.getElementById('modal-exit'))">
                 </div>
-                <p style="text-align: justify; font-size: 16px;">Opuszcenie rodziny spowoduje brak możliwości wpłat na
+                <p class="space-con" style=" text-align: justify; font-size: 16px;">Opuszcenie rodziny spowoduje brak
+                    możliwości wpłat na
                     cele rodziny.
                     Aby wrócić do rodziny, jeden z jej członków będzie musiał Cię dodać.
                 </p>
                 <div class="info-container">
-                    <button class="confrim" type="submit" id="commit_button">Potwierdź</button>
+                    <button class="new-btn popup-btn type=" submit" id="commit_button">Potwierdź</button>
                 </div>
             </form>
         </div>
@@ -126,11 +156,20 @@
             <p class="to-pay">Suma: <strong id="goal_price"></strong><span> PLN</span></p>
             <h1 class="to-pay" id="goal_to_pay"></h1>
             <p class="to-pay">Opis:</p>
-            <p class="description-box">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint nihil aut officiis
-                commodi repellendus corrupti, ipsa consectetur saepe labore molestias dolorem, consequuntur nam aperiam.
-                Vitae sunt voluptatum nisi natus ducimus?</p>
-            <div class="info-container">
-                <button class="confrim" type="submit" id="commit_button"
+            <form class="space-con desc-form" action="{{url_for('updateFamilyDescription', id = Family_id)}}"
+                method="POST" id="descriptionForm">
+                <textarea class="description-box" name="descriptionInput" id="descriptionInput" cols="30" rows="10"
+                    disabled maxlength="100"></textarea>
+                <img id="editButton" class="edit-btn" onclick="editTextarea()" src="../static/Edit button.svg" alt="">
+                <div id="confrimButton" class="confrim-container">
+                    <img src="../static/Confrim button.svg" alt="">
+                    <button type="submit" class="confrim-btn"></button>
+                </div>
+                <img id="declineButton" class="decline-btn" onclick="declineTextarea()"
+                    src="../static/Decline button.svg" alt="">
+            </form>
+            <div class="info-container" style="margin: 10px 0;">
+                <button class="new-btn popup-btn" type="submit" id="commit_button"
                     onclick="closeGoalPopup(document.getElementById('modal-info')); openPopup(document.getElementById('modal-transaction'))">Wpłać</button>
             </div>
         </div>
@@ -138,19 +177,19 @@
     <div class="modal-background" id="modal-transaction" role="dialog">
         <div id="window" style="width: 400px;">
             <form action="{{url_for('familyGoalTransaction')}}" method="POST" id="goalTransactionForm">
-                <div class="info-container" style="margin-top: 0px;">
+                <div class="info-container clearfix" style="margin-top: 0px;">
                     <h2>Ile chcesz przelać?</h2>
                     <img src="../static/Go back 2.svg"
                         onclick="closePopupFinish(document.getElementById('modal-transaction'))">
                 </div>
-                <div class="info-container">
-                    <input class="input-container_valid" style="float: left;" placeholder="Wprowadź ilość pieniędzy"
-                        id="inputAmmount" name="inputAmmount" required>
+                <div class="info-container space-con">
+                    <input class="input-container_valid" placeholder="Wprowadź ilość pieniędzy" id="inputAmmount"
+                        name="inputAmmount" required>
                 </div>
                 <div class="info-container">
-                    <button class="confrim" type="submit" id="pay-btn">Potwierdź</button>
+                    <button class="new-btn popup-btn" type="submit" id="pay-btn">Potwierdź</button>
                 </div>
-                <p id="Error-transaction" class="errorText">{{error}}</p>
+                <p id="Error-transaction" class="errorText">{{error3}}</p>
             </form>
         </div>
     </div>
@@ -208,10 +247,20 @@
         goal_id_info.name = "inputGoalID";
         goal_id_info.style.display = "none";
         document.getElementById("goalTransactionForm").appendChild(goal_id_info);
+        document.getElementById("descriptionInput").value = description;
+        if (description == "None") {
+            document.getElementById("descriptionInput").value = "";
+            document.getElementById("descriptionInput").placeholder = "Dodaj opis ...";
+        }
+        document.getElementById("descriptionForm").appendChild(goal_id_info);
     }
     function closeGoalPopup(modal) {
         modal.style.visibility = "hidden";
         console.log("dziala");
+        document.getElementById("confrimButton").style.display = "none";
+        document.getElementById("declineButton").style.display = "none";
+        document.getElementById("editButton").style.display = "block";
+        document.getElementById("descriptionInput").disabled = true;
     }
 
     function openPopup(modal) {
@@ -221,12 +270,19 @@
     function closePopup(modal) {
         modal.style.visibility = "hidden";
         console.log("dziala");
+        document.getElementById("confrimButton").style.display = "none";
+        document.getElementById("declineButton").style.display = "none";
+        document.getElementById("editButton").style.display = "block";
+        document.getElementById("descriptionInput").disabled = true;
     }
 
     function closePopupFinish(modal) {
         modal.style.visibility = "hidden";
         document.getElementById("inputGoalID").remove();
-        console.log("działa")
+        document.getElementById("confrimButton").style.display = "none";
+        document.getElementById("declineButton").style.display = "none";
+        document.getElementById("editButton").style.display = "block";
+        document.getElementById("descriptionInput").disabled = true;
     }
 
     function stringHasOnlyLetters(_string) {
@@ -247,6 +303,22 @@
             commit_button.disabled = true;
         }
     }
+    function editTextarea() {
+        document.getElementById("editButton").style.display = "None";
+        document.getElementById("descriptionInput").disabled = false;
+        document.getElementById("descriptionInput").focus();
+        document.getElementById("confrimButton").style.display = "block";
+        document.getElementById("declineButton").style.display = "block";
+    }
+
+    function declineTextarea() {
+        document.getElementById("confrimButton").style.display = "none";
+        document.getElementById("declineButton").style.display = "none";
+        document.getElementById("editButton").style.display = "block";
+        document.getElementById("descriptionInput").disabled = true;
+        document.getElementById("descriptionInput").value = "";
+    }
+
 </script>
 
 {% endblock %}
