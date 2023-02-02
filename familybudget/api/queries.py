@@ -70,7 +70,7 @@ def listCategories_resolver(obj, info):
         print(categories)
         payload = {
             "success": True,
-            "category": categories
+            "categories": categories
         }
     except Exception as error:
         payload = {

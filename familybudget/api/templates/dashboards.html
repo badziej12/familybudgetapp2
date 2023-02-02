@@ -1,0 +1,250 @@
+{% extends 'userHome.html' %}
+
+{% block content %}
+
+<style>
+    #dashboards {
+        background: rgba(217, 217, 217, 0.29);
+    }
+</style>
+
+<script>
+    function selectChartYear(selectedYear, monthDropdown, chartID, dropdownTitle) {
+        while (monthDropdown.firstChild) {
+            monthDropdown.removeChild(monthDropdown.lastChild);
+        }
+        {% for month in Chart_months['2023'] %}
+        var a = document.createElement('a');
+        var b = document.createTextNode('{{month}}');
+        a.appendChild(b);
+        monthDropdown.appendChild(a);
+        a.onclick = function () { adjustChartTitle('{{month}}', chartID, dropdownTitle) };
+        {% endfor %}
+
+        monthDropdown.style.display = 'block';
+    }
+</script>
+
+<script src="../static/dashboard.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+            ['Kategoria', 'Wydatki'],
+            {%for chart_data in Category_chart %}
+    ['{{chart_data}}', {{ Category_chart[chart_data]}}],
+        {% endfor %}
+        ]);
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, {
+        title: 'Suma wszyskich wydanych przez Ciebie pieniędzy z podziałem na kategorie',
+        colors: ['#3D159C', '#B00087', '#ED2668', '#FF744D', '#FFB948', '#F9F871', '#007E68', '#CB1913'],
+        is3D: true,
+        backgroundColor: '#F6F2FF',
+    });
+    }
+</script>
+
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+            ['Kategoria', 'Zaplanowane wydatki'],
+            {%for chart_data in Planned_chart %}
+    ['{{chart_data}}', {{ Planned_chart[chart_data]}}],
+        {% endfor %}
+        ]);
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
+
+    chart.draw(data, {
+        title: 'Wszystkie Twoje zaplanowane wydatki z podziałem na kateogrie',
+        colors: ['#3D159C', '#B00087', '#ED2668', '#FF744D', '#FFB948', '#F9F871', '#007E68', '#CB1913'],
+        is3D: true,
+        backgroundColor: '#F6F2FF',
+    });
+    }
+</script>
+
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        const d = new Date();
+        let month = d.getMonth();
+
+        let monthNames = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
+        selectedMonth = monthNames[month];
+
+        {% for chart in Category_chart_by_month['2023'] %}
+        if (selectedMonth == '{{chart}}') {
+            var data = google.visualization.arrayToDataTable([
+                ['Kategoria', 'PLN'],
+                {% for category in Category_chart_by_month['2023'][chart] %}
+        ['{{category}}', {{ Category_chart_by_month['2023'][chart][category] }}],
+    {% endfor %}
+            ]);
+    }
+    {% endfor %}
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart3'));
+
+    chart.draw(data, {
+        title: 'Twoje wydatki w miesiącu: ' + selectedMonth,
+        colors: ['#3D159C', '#B00087', '#ED2668', '#FF744D', '#FFB948', '#F9F871', '#007E68', '#CB1913'],
+        is3D: true,
+        backgroundColor: '#F6F2FF',
+    });
+    }
+</script>
+
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        const d = new Date();
+        let month = d.getMonth();
+
+        let monthNames = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
+        selectedMonth = monthNames[month];
+
+        {% for chart in Planned_chart_by_month['2023'] %}
+        if (selectedMonth == '{{chart}}') {
+            var data = google.visualization.arrayToDataTable([
+                ['Kategoria', 'PLN'],
+                {% for category in Planned_chart_by_month['2023'][chart] %}
+        ['{{category}}', {{ Planned_chart_by_month['2023'][chart][category] }}],
+    {% endfor %}
+    ]);
+}
+    {% endfor %}
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart4'));
+
+    chart.draw(data, {
+        title: 'Twoje zaplanowane wydatki w miesiącu: ' + selectedMonth,
+        colors: ['#3D159C', '#B00087', '#ED2668', '#FF744D', '#FFB948', '#F9F871', '#007E68', '#CB1913'],
+        is3D: true,
+        backgroundColor: '#F6F2FF',
+    });
+}
+</script>
+
+<h1 style="text-align: center;">Wykresy Twoich wydatków</h1>
+
+<div class="chart-container clearfix">
+    <div id="piechart" class="chart"></div>
+    <div class="chart">
+        <div id="piechart3" style="width:100%; height: 100%;"></div>
+        <div class="chart-date">
+            <div
+                onclick="showChartDropdown(document.getElementById('dropdown1'), document.getElementById('dropdown1-month'))">
+                <p id="chart-month1">Styczeń 2023</p>
+                <img src="../static/Polygon 2.png" alt="">
+            </div>
+            <div class="chart-dropdown" id="dropdown1">
+                {% for year in Chart_months %}
+                <a href='#'
+                    onclick="selectChartYear({{year}}, document.getElementById('dropdown1-month'), document.getElementById('piechart3'), document.getElementById('chart-month1'))">{{year}}</a>
+                {% endfor %}
+            </div>
+            <div class="chart-dropdown" id="dropdown1-month">
+            </div>
+        </div>
+    </div>
+
+    <div id="piechart2" class="chart"></div>
+    <div class="chart">
+        <div id="piechart4" style="width:100%; height: 100%;"></div>
+        <div class="chart-date">
+            <div
+                onclick="showChartDropdown(document.getElementById('dropdown2'), document.getElementById('dropdown2-month'))">
+                <p id="chart-month2">Styczeń 2023</p>
+                <img src="../static/Polygon 2.png" alt="">
+            </div>
+
+            <div class="chart-dropdown" id="dropdown2">
+                {% for year in Chart_months %}
+                <a href='#'
+                    onclick="selectChartYear({{year}}, document.getElementById('dropdown2-month'), document.getElementById('piechart4'), document.getElementById('chart-month2'))">{{year}}</a>
+                {% endfor %}
+            </div>
+            <div class="chart-dropdown" id="dropdown2-month">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    function adjustChartTitle(selectedMonth, chartID, dropdownTitle) {
+        dropdownTitle.innerHTML = selectedMonth.toString() + ' 2023';
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        console.log(selectedMonth.toString());
+        var chartIDName = chartID.id;
+
+        function drawChart() {
+            if (chartIDName == 'piechart3') {
+                {% for chart in Category_chart_by_month['2023'] %}
+                if (selectedMonth.toString() == '{{chart}}') {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Kategoria', 'PLN'],
+                        {% for category in Category_chart_by_month['2023'][chart] %}
+                ['{{category}}', {{ Category_chart_by_month['2023'][chart][category] }}],
+            {% endfor %}
+            ]);
+        }
+        {% endfor %}
+    } else if (chartIDName == 'piechart4') {
+        {% for chart in Planned_chart_by_month['2023'] %}
+        if (selectedMonth.toString() == '{{chart}}') {
+            var data = google.visualization.arrayToDataTable([
+                ['Kategoria', 'PLN'],
+                {% for category in Planned_chart_by_month['2023'][chart] %}
+        ['{{category}}', {{ Planned_chart_by_month['2023'][chart][category] }}],
+    {% endfor %}
+            ]);
+    }
+    {% endfor %}
+    }
+
+    var chart = new google.visualization.PieChart(document.getElementById(chartIDName));
+
+    if (chartIDName == 'piechart3') {
+        chart.draw(data, {
+            title: 'Twoje wydatki w miesiącu: ' + selectedMonth,
+            colors: ['#3D159C', '#B00087', '#ED2668', '#FF744D', '#FFB948', '#F9F871', '#007E68', '#CB1913'],
+            is3D: true,
+            backgroundColor: '#F6F2FF',
+        });
+    } else if (chartIDName == 'piechart4') {
+        chart.draw(data, {
+            title: 'Twoje zaplanowane wydatki w miesiącu: ' + selectedMonth,
+            colors: ['#3D159C', '#B00087', '#ED2668', '#FF744D', '#FFB948', '#F9F871', '#007E68', '#CB1913'],
+            is3D: true,
+            backgroundColor: '#F6F2FF',
+        });
+    }
+        }
+    }
+
+</script>
+
+
+{% endblock %}

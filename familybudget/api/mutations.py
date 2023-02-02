@@ -4,10 +4,12 @@ from api import db
 from api.models import Families, Transactions, Users, Categories, Goals, Wallet, Members
 from psycopg2 import IntegrityError
 
+
 @convert_kwargs_to_snake_case
-def create_wallet_resolver(obj, info, balance, month, user_id):
+def create_wallet_resolver(obj, info, balance, month, year, user_id):
     try:
-        wallet = Wallet(balance=balance, month=month, user_id=user_id)
+        wallet = Wallet(balance=balance, month=month,
+                        year=year, user_id=user_id)
         db.session.add(wallet)
         db.session.commit()
         payload = {
@@ -20,6 +22,7 @@ def create_wallet_resolver(obj, info, balance, month, user_id):
             "errors": ["Wallet {wallet.id} already exsist!"]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def delete_wallet_resolver(obj, info, id):
@@ -38,14 +41,17 @@ def delete_wallet_resolver(obj, info, id):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
-def update_wallet_resolver(obj, info, id, balance, month):
+def update_wallet_resolver(obj, info, id, balance, month, year):
     try:
         wallet = Wallet.query.get(id)
         if balance != None:
             wallet.balance += balance
         if month != None:
             wallet.month = month
+        if year != None:
+            wallet.month = year
 
         db.session.add(wallet)
         db.session.commit()
@@ -60,13 +66,15 @@ def update_wallet_resolver(obj, info, id, balance, month):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
-def create_goal_resolver(obj, info, deadline, name, price, description, wallet_id, category_id, family_id):
+def create_goal_resolver(obj, info, deadline, name, price, description, paid, wallet_id, category_id, family_id):
     try:
         today = date.today()
         goal = Goals(
-            created_at = today, deadline=deadline, name=name, price=price,
-             description=description, category_id=category_id, family_id=family_id, wallet_id=wallet_id
+            created_at=today, deadline=deadline, name=name, price=price,
+            description=description, category_id=category_id, family_id=family_id, wallet_id=wallet_id,
+            paid=paid
         )
 
         db.session.add(goal)
@@ -82,8 +90,9 @@ def create_goal_resolver(obj, info, deadline, name, price, description, wallet_i
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
-def update_goal_resolver(obj, info, id, deadline, name, price, description):
+def update_goal_resolver(obj, info, id, deadline, name, price, description, paid):
     try:
         goal = Goals.query.get(id)
 
@@ -95,6 +104,8 @@ def update_goal_resolver(obj, info, id, deadline, name, price, description):
             goal.price = price
         if description != None:
             goal.description = description
+        if paid != None:
+            goal.paid = paid
 
         db.session.add(goal)
         db.session.commit()
@@ -107,7 +118,7 @@ def update_goal_resolver(obj, info, id, deadline, name, price, description):
         payload = {
             "success": False,
             "errors": [f"Incorrect date format provided. Date should be in "
-                       f"the format dd-mm-yyyy"]   
+                       f"the format dd-mm-yyyy"]
         }
     except AttributeError:
         payload = {
@@ -115,6 +126,7 @@ def update_goal_resolver(obj, info, id, deadline, name, price, description):
             "errors": ["Goal with id {id} not found."]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def delete_goal_resolver(obj, info, id):
@@ -140,7 +152,8 @@ def create_user_resolver(obj, info, nickname, email, password):
     try:
         today = date.today()
         user = Users(
-            nickname=nickname, email=email, password=password, created_at=today.strftime("%b-%d-%Y")
+            nickname=nickname, email=email, password=password, created_at=today.strftime(
+                "%b-%d-%Y")
         )
         db.session.add(user)
         db.session.commit()
@@ -158,22 +171,23 @@ def create_user_resolver(obj, info, nickname, email, password):
         payload = {
             "success": False,
             "errors": ["Nickname {nickname} or email {email} already exists"]
-        } 
+        }
 
     return payload
+
 
 @convert_kwargs_to_snake_case
 def new_transaction_resolver(obj, info, title, wallet_id, ammount, category_id, goal_id):
     try:
         today = date.today()
         transaction = Transactions(
-            date = today.strftime("%b-%d-%Y"),
-            title=title, ammount=ammount, wallet_id=wallet_id, category_id=category_id, goal_id = goal_id
+            date=today.strftime("%b-%d-%Y"),
+            title=title, ammount=ammount, wallet_id=wallet_id, category_id=category_id, goal_id=goal_id
         )
         decrease = 0 - ammount
 
-        update_wallet_resolver(None, None, wallet_id, decrease, None)
-        
+        update_wallet_resolver(None, None, wallet_id, decrease, None, None)
+
         db.session.add(transaction)
         db.session.commit()
         payload = {
@@ -190,22 +204,23 @@ def new_transaction_resolver(obj, info, title, wallet_id, ammount, category_id, 
         payload = {
             "success": False,
             "errors": ["Transaction {transaction.id} already exists"]
-        } 
+        }
 
     return payload
+
 
 @convert_kwargs_to_snake_case
 def create_family_resolver(obj, info, name, member_id):
     try:
-        
+
         family = Families(
-            name = name
+            name=name
         )
         db.session.add(family)
         db.session.commit()
         member = Members(
-            user_id = member_id,
-            family_id = family.id
+            user_id=member_id,
+            family_id=family.id
         )
         db.session.add(member)
         db.session.commit()
@@ -220,12 +235,13 @@ def create_family_resolver(obj, info, name, member_id):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def create_category_resolver(obj, info, name):
     try:
-        
+
         category = Categories(
-            name = name
+            name=name
         )
         db.session.add(category)
         db.session.commit()
@@ -240,10 +256,11 @@ def create_category_resolver(obj, info, name):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def delete_category_resolver(obj, info, id):
     try:
-        
+
         category = Categories.query.get(id)
         db.session.delete(category)
         db.session.commit()
@@ -263,8 +280,8 @@ def delete_category_resolver(obj, info, id):
 def add_family_member_resolver(obj, info, member_id, family_id):
     try:
         member = Members(
-            user_id = member_id,
-            family_id = family_id
+            user_id=member_id,
+            family_id=family_id
         )
         db.session.add(member)
         db.session.commit()
@@ -277,6 +294,7 @@ def add_family_member_resolver(obj, info, member_id, family_id):
             "errors": ["Member is wrong"]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def delete_family_member_resolver(obj, info, user_id, family_id):
@@ -294,6 +312,7 @@ def delete_family_member_resolver(obj, info, user_id, family_id):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def update_user_resolver(obj, info, id, nickname, email, password):
     try:
@@ -305,7 +324,7 @@ def update_user_resolver(obj, info, id, nickname, email, password):
                 user.email = email
             if password != None:
                 user.password = password
-            
+
         db.session.add(user)
         db.session.commit()
         payload = {
@@ -318,6 +337,7 @@ def update_user_resolver(obj, info, id, nickname, email, password):
             "errors": ["Item matching id {id} not found"]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def delete_user_resolver(obj, info, id):
@@ -333,6 +353,7 @@ def delete_user_resolver(obj, info, id):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def delete_transaction_resolver(obj, info, id):
     try:
@@ -346,7 +367,6 @@ def delete_transaction_resolver(obj, info, id):
             "errors": ["Not found"]
         }
     return payload
-
 
 
 @convert_kwargs_to_snake_case

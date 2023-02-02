@@ -2,11 +2,11 @@ from app import db
 from sqlalchemy.orm import relationship
 
 
-
 class Members(db.Model):
     __tablename__ = "members"
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    family_id = db.Column(db.Integer, db.ForeignKey('family.id'), primary_key=True)
+    family_id = db.Column(db.Integer, db.ForeignKey(
+        'family.id'), primary_key=True)
     user = db.relationship("Users", back_populates="families")
     family = db.relationship("Families", back_populates="members")
 
@@ -31,8 +31,7 @@ class Users(db.Model):
     families = db.relationship(
         "Members", back_populates="user"
     )
-    
-    
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -42,8 +41,9 @@ class Users(db.Model):
             "wallet": self.wallet,
             "families": self.families,
             "created_at": str(self.created_at.strftime('%d-%m-%Y')),
-            
+
         }
+
 
 class Transactions(db.Model):
     __tablename__ = "transaction"
@@ -58,7 +58,7 @@ class Transactions(db.Model):
     wallet = db.relationship("Wallet", back_populates="transaction")
     goal = db.relationship("Goals", back_populates="transaction")
     category = relationship("Categories", back_populates="transaction")
-    
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -72,6 +72,7 @@ class Transactions(db.Model):
             "goal": self.goal
         }
 
+
 class Families(db.Model):
     __tablename__ = "family"
     id = db.Column(db.Integer, primary_key=True)
@@ -81,13 +82,15 @@ class Families(db.Model):
     members = db.relationship(
         "Members", back_populates="family"
     )
+
     def to_dict(self):
-        return{
+        return {
             "id": self.id,
             "name": self.name,
             "goals": self.goals,
             "members": self.members,
         }
+
 
 class Categories(db.Model):
     __tablename__ = "category"
@@ -96,7 +99,7 @@ class Categories(db.Model):
 
     transaction = db.relationship("Transactions", back_populates="category")
     goals = db.relationship("Goals", back_populates="category")
-    
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -104,6 +107,7 @@ class Categories(db.Model):
             "transaction": self.transaction,
             "goals": self.goals
         }
+
 
 class Goals(db.Model):
     __tablename__ = "goal"
@@ -113,14 +117,18 @@ class Goals(db.Model):
     name = db.Column(db.String)
     price = db.Column(db.Float)
     description = db.Column(db.String)
+    paid = db.Column(db.Boolean)
     wallet_id = db.Column(db.Integer, db.ForeignKey("wallet.id"))
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     family_id = db.Column(db.Integer, db.ForeignKey("family.id"))
 
-    wallet = db.relationship("Wallet", back_populates="goals")
-    category = db.relationship("Categories", back_populates="goals")
-    family = db.relationship("Families", back_populates="goals")
-    transaction = db.relationship("Transactions", back_populates="goal")
+    wallet = db.relationship("Wallet", back_populates="goals", lazy="subquery")
+    category = db.relationship(
+        "Categories", back_populates="goals", lazy="subquery")
+    family = db.relationship(
+        "Families", back_populates="goals", lazy="subquery")
+    transaction = db.relationship(
+        "Transactions", back_populates="goal", lazy="subquery")
 
     def to_dict(self):
         return {
@@ -130,6 +138,7 @@ class Goals(db.Model):
             "name": self.name,
             "price": self.price,
             "description": self.description,
+            "paid": self.paid,
             "wallet_id": self.wallet_id,
             "wallet": self.wallet,
             "category_id": self.category_id,
@@ -138,22 +147,25 @@ class Goals(db.Model):
             "family": self.family
         }
 
+
 class Wallet(db.Model):
     __tablename__ = "wallet"
     id = db.Column(db.Integer, primary_key=True)
     balance = db.Column(db.Float)
     month = db.Column(db.Integer)
+    year = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     user = db.relationship("Users", back_populates="wallet")
     transaction = db.relationship("Transactions", back_populates="wallet")
-    goals = db.relationship("Goals", back_populates = "wallet")
+    goals = db.relationship("Goals", back_populates="wallet")
 
     def to_dict(self):
         return {
             "id": self.id,
             "balance": self.balance,
             "month": self.month,
+            "year": self.year,
             "user_id": self.user_id,
             "user": self.user,
             "transaction": self.transaction
