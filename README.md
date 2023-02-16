@@ -28,7 +28,7 @@ Z tego poziomu należy utworzyć wirtualne środowisko wpisując komendę:
     
 a następnie uruchomić je za pomocą komendy:
     
-    Scripts\textbackslash activate
+    Scripts\activate
     
 Po uruchomieniu należy pobrać wszystkie wymagane biblioteki i komponenty komendą:
     
