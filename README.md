@@ -1,20 +1,15 @@
 # familybudgetapp2
 
-Celem pracy było zaprojektowanie oraz zaimplementowanie bazy danych oraz apli-
-kacji webowej służącej do zarządzania budżetem domowym. Użytkownik korzystający
-z aplikacji może założyć swoje własne konto, którego dane będą przechowywane w ze-
-wnętrznej bazie danych, tak jak i informacje o jego transakcjach, rodzinach oraz port-
-felu. Za pomocą takiego konta można planować i odnotowywać wydatki w danym mie-
-siącu, by później analizować w jakich kategoriach wydano swoje pieniądze, a ile plano-
-wano wydać. Aplikacja służy również do dzielenia swoich wydatków między członkami
-”rodzin”, czyli grup użytkowników, którzy postanowili taką rodzinę założyć i w niej
-uczestniczyć. W panelu rodziny można umieszczać cele lub wydatki, których kwota
-dzielić się będzie równomiernie między członkami tej rodziny. Zarządzane fundusze są
-wirtualne i nie posiadają żadnej wartości. Daje to możliwość podglądu i analizy swoich
-wydatków. Aplikacja została zaimplementowana przy użyciu Framework’a Flask oraz
-języka Python. Interfejs graficzny został zaprojektowany w aplikacji Figma i zaimple-
-mentowany w języku HTML, CSS oraz JavaScript. Do aplikacji zaprojektowana została
-również baza danych PostgreSQL na platfromie ElephantSQL. Jest ona przeznaczona
+Celem pracy było zaprojektowanie oraz zaimplementowanie bazy danych oraz aplikacji webowej służącej do zarządzania budżetem domowym.
+Użytkownik korzystający z aplikacji może założyć swoje własne konto, którego dane będą przechowywane w zewnętrznej bazie danych,
+tak jak i informacje o jego transakcjach, rodzinach oraz portfelu. Za pomocą takiego konta można planować i odnotowywać wydatki w danym miesiącu,
+by później analizować w jakich kategoriach wydano swoje pieniądze, a ile planowano wydać.
+Aplikacja służy również do dzielenia swoich wydatków między członkami ”rodzin”, czyli grup użytkowników,
+którzy postanowili taką rodzinę założyć i w niej uczestniczyć. W panelu rodziny można umieszczać cele lub wydatki, których kwota
+dzielić się będzie równomiernie między członkami tej rodziny. Zarządzane fundusze są wirtualne i nie posiadają żadnej wartości.
+Daje to możliwość podglądu i analizy swoich wydatków. Aplikacja została zaimplementowana przy użyciu Framework’a Flask oraz
+języka Python. Interfejs graficzny został zaprojektowany w aplikacji Figma i zaimplementowany w języku HTML, CSS oraz JavaScript. 
+Do aplikacji zaprojektowana została również baza danych PostgreSQL na platfromie ElephantSQL. Jest ona przeznaczona
 dla każdej osoby chcącej zadbać o swój domowy budżet.
 
 
